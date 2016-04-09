@@ -105,5 +105,10 @@
             _horizontalRot = horizontal;
             _verticalRot = vertical;
         }
+
+        public void Bounce(Vector3 normal)
+        {
+            this.velocity = Vector3.Reflect(this.velocity, normal);
+        }
     }
 }

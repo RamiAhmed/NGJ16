@@ -8,6 +8,7 @@
 
         public LayerMask playerLayer;
         public LayerMask tankLayer;
+        public LayerMask wallLayer;
 
         private void OnEnable()
         {

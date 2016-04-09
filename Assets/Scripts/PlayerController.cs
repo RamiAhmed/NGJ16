@@ -85,7 +85,19 @@
             this.transform.rotation = _mover.rotation;
         }
 
-        public void Attack()
+        private void OnCollisionEnter(Collision collision)
+        {
+            var other = collision.gameObject;
+            if (((1 << other.layer) & Layers.instance.wallLayer) == 0)
+            {
+                return;
+            }
+
+            Debug.Log(this.ToString() + " reflect off wall");
+            _mover.Bounce(collision.contacts[0].normal);
+        }
+
+        private void Attack()
         {
             var time = Time.timeSinceLevelLoad;
             if (time - _lastAttack < 1f / this.attacksPerSecond)
@@ -110,7 +122,7 @@
             }
         }
 
-        public void Repair()
+        private void Repair()
         {
             var time = Time.timeSinceLevelLoad;
             if (time - _lastRepair < 1f / this.repairPerSecond)
