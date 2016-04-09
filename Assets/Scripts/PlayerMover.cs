@@ -17,6 +17,9 @@
         [Range(1f, 100f)]
         public float dashDistance = 10f;
 
+        [Range(0.0001f, 0.1f)]
+        public float minimumSpeed = 0.01f;
+
 #if UNITY_EDITOR
 
         [ReadOnly]
@@ -95,6 +98,12 @@
 
             this.velocity -= this.velocity * this.friction * deltaTime;
             this.velocity += this.acceleration * deltaTime;
+
+            if (this.velocity.sqrMagnitude < (this.minimumSpeed * this.minimumSpeed))
+            {
+                // null all velocities if below minimum speed
+                _rb.velocity = this.velocity = Vector3.zero;
+            }
 
             if (this.dashVelocity.sqrMagnitude > 0f)
             {
