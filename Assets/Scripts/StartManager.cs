@@ -19,6 +19,8 @@
 
         public PlayerSetup[] playerSetups = new PlayerSetup[0];
 
+        public Font font;
+
         private List<int> _list = new List<int>(3);
         private bool _starting;
         private int _countdown;
@@ -52,6 +54,10 @@
                 _style = new GUIStyle(GUI.skin.label);
                 _style.fontSize = this.fontSize;
                 _style.alignment = TextAnchor.MiddleCenter;
+                if (this.font != null)
+                {
+                    _style.font = this.font;
+                }
             }
 
             var count = _list.Count;
@@ -72,6 +78,15 @@
                 var h = 100f;
                 GUI.color = this.countdownColor;
                 GUI.Label(new Rect((width * 0.5f) - (w * 0.5f), (height * 0.5f) - (h * 0.5f), w, h), _countdown.ToString(), _style);
+            }
+            else
+            {
+                var height = Screen.height;
+                var width = Screen.width;
+                var w = 500f;
+                var h = 150f;
+                GUI.color = this.countdownColor;
+                GUI.Label(new Rect((width * 0.5f) - (w * 0.5f), (height * 0.5f) - (h * 0.5f), w, h), "PRESS START TO JOIN", _style);
             }
         }
 

@@ -5,7 +5,7 @@
 
     public class UIManager : MonoBehaviour
     {
-        public string gameScene = "testlevel_2";
+        public string gameScene = "testLevel_2";
 
         public void OnClickStart()
         {
@@ -17,17 +17,17 @@
             Application.Quit();
         }
 
-		public void OnClickMainMenu()
-		{
-			SceneManager.LoadScene("Test");
-		}
+		//public void OnClickMainMenu()
+		//{
+		//	SceneManager.LoadScene("Test");
+		//}
 
-        private void Update()
-        {
-            if (Input.GetButtonDown("Reload"))
-            {
-                SceneManager.LoadScene("testlevel_2");
-            }
-        }
+  //      private void Update()
+  //      {
+  //          if (Input.GetButtonDown("Reload"))
+  //          {
+  //              SceneManager.LoadScene("testlevel_2");
+  //          }
+  //      }
     }
 }
