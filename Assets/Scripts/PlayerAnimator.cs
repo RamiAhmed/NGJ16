@@ -8,12 +8,14 @@
     [RequireComponent(typeof(PlayerController))]
     public class PlayerAnimator : MonoBehaviour
     {
+        private const float moveThreshold = 0.1f;
         private const float attackDirThreshold = 0.1f;
+        private const float dashDirThreshold = 0.1f;
 
         public string walking = "Walking";
 
         public string attackingUp = "AttackUp";
-        
+
         public string attacking = "AttackSideways";
 
         public string attackingDown = "AttackDown";
@@ -45,7 +47,7 @@
         private void Update()
         {
             var velocity = _mover.velocity;
-            var walking = velocity.sqrMagnitude > 0f;
+            var walking = velocity.sqrMagnitude > moveThreshold;
             _animator.SetBool(this.walking, walking);
             if (walking)
             {
@@ -54,7 +56,7 @@
             }
 
             var attackDir = _player.attackDirection;
-            if (attackDir.sqrMagnitude > 0f)
+            if (attackDir.sqrMagnitude > attackDirThreshold)
             {
                 var attackSideways = Mathf.Abs(attackDir.x) > attackDirThreshold;
                 _animator.SetBool(this.attacking, attackSideways);
@@ -74,7 +76,7 @@
             }
 
             var dashDir = _mover.dashVelocity;
-            if (dashDir.sqrMagnitude > 0f)
+            if (dashDir.sqrMagnitude > dashDirThreshold)
             {
                 var left = dashDir.x < 0f;
                 _animator.SetBool(this.dashingLeft, left);
