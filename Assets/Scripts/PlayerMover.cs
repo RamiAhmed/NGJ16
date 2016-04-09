@@ -92,7 +92,7 @@
 
             if (_rb != null)
             {
-                _rb.velocity = _rb.angularVelocity = Vector3.zero;
+                _rb.angularVelocity = Vector3.zero;
             }
 
             var deltaTime = Time.deltaTime;
@@ -111,9 +111,11 @@
             }
 
             // Velocity Verlet integration : http://lolengine.net/blog/2011/12/14/understanding-motion-in-games
-            var speed = this.position + ((prevVelocity + this.velocity) / 0.5f) * deltaTime;
+            var speed = ((prevVelocity + this.velocity) / 0.5f);
             speed.y = 0f;
-            this.position = speed;
+
+            // We set the velocity on the rigidbody so as to utilize Unity collision detection, this in turn means that we do not multiply by deltaTime as this is done internally in rigidbody
+            _rb.velocity = speed;
 
             if (_horizontalRot != 0f || _verticalRot != 0f)
             {
@@ -136,6 +138,8 @@
 
         public void Dash()
         {
+            // Do we want dash to move in the rotation direction or the velocity direction ?
+            //this.dashVelocity = (this.rotation * Vector3.forward) * this.dashDistance;
             this.dashVelocity = this.velocity.normalized * this.dashDistance;
         }
     }
