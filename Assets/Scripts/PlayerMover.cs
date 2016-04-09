@@ -2,6 +2,7 @@
 {
     using UnityEngine;
 
+    [RequireComponent(typeof(Rigidbody))]
     public class PlayerMover : MonoBehaviour
     {
         [SerializeField, Range(1f, 1000f)]
