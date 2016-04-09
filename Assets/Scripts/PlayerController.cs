@@ -96,7 +96,7 @@
             _lastAttack = time;
             Debug.Log(string.Concat("Player ", this.playerIndex, " - Attack"));
 
-            var hits = Physics.SphereCastAll(this.transform.position, _radius, _mover.rotation.eulerAngles, this.attackRadius, Layers.instance.playerLayer);
+            var hits = Physics.SphereCastAll(this.transform.position, _radius, _mover.rotation * Vector3.forward, this.attackRadius, Layers.instance.playerLayer);
             for (int i = 0; i < hits.Length; i++)
             {
                 var hit = hits[i];
@@ -124,6 +124,7 @@
 
         public void Hit(PlayerController attacker)
         {
+            Debug.Log(this.ToString() + " hit by " + attacker.ToString());
             var dir = (this.transform.position - attacker.transform.position);
             _mover.input += dir * this.hitPower;
         }
