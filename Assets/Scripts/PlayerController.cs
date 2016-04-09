@@ -109,7 +109,8 @@
             _lastAttack = time;
             Debug.Log(string.Concat("Player ", this.playerIndex, " - Attack"));
 
-            var hits = Physics.SphereCastAll(this.transform.position, _radius, _mover.rotation * Vector3.forward, this.attackRadius, Layers.instance.playerLayer);
+            var dir = _mover.rotation * Vector3.forward;
+            var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius, dir, this.attackRadius, Layers.instance.playerLayer);
             for (int i = 0; i < hits.Length; i++)
             {
                 var hit = hits[i];
@@ -144,6 +145,7 @@
 
         public void Die()
         {
+            this.gameObject.SetActive(false);
             Debug.Log(this.ToString() + " has died");
         }
     }
