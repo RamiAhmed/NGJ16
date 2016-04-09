@@ -202,6 +202,11 @@
             Debug.Log(this.ToString() + " DASH!");
         }
 
+        public void Bounce(Vector3 normal)
+        {
+            _mover.Bounce(normal);
+        }
+
         public void Hit(PlayerController attacker)
         {
             Debug.Log(this.ToString() + " hit by " + attacker.ToString());

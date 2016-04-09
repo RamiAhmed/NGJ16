@@ -68,6 +68,8 @@
             }
 
             Debug.Log(this.ToString() + " start leaking");
+            var normal = (player.transform.position - this.transform.position).normalized;
+            player.Bounce(normal);
             this.isLeaking = true;
         }
     }
