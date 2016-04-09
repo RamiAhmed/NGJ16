@@ -28,6 +28,9 @@
         [Range(0.1f, 10f)]
         public float repairRadius = 1f;
 
+        [Range(0.1f, 10f)]
+        public float dashPerSecond = 1f;
+
         public bool isHit
         {
             get;
@@ -37,6 +40,7 @@
         private PlayerMover _mover;
         private float _lastAttack;
         private float _lastRepair;
+        private float _lastDash;
         private float _radius;
 
         private string horizontalPos = string.Empty;
@@ -44,6 +48,8 @@
         private string horizontalRot = string.Empty;
         private string verticalRot = string.Empty;
         private string interact = string.Empty;
+
+        [SerializeField, ReadOnly]
         private string dash = string.Empty;
 
         private void OnEnable()
@@ -85,11 +91,6 @@
                 _mover.Rotate(hrot, vrot);
             }
 
-            if (Input.GetButtonDown(this.dash))
-            {
-                _mover.Dash();
-            }
-
             var act = Input.GetAxis(this.interact);
             if (act == -1f)
             {
@@ -99,6 +100,11 @@
             if (act == 1f)
             {
                 Repair();
+            }
+
+            if (Input.GetButtonUp(this.dash))
+            {
+                Dash();
             }
 
             if (this.isHit)
@@ -181,6 +187,19 @@
 
                 tank.isLeaking = false;
             }
+        }
+
+        private void Dash()
+        {
+            var time = Time.time;
+            if (time - _lastDash < 1f / this.dashPerSecond)
+            {
+                return;
+            }
+
+            _lastDash = time;
+            _mover.Dash();
+            Debug.Log(this.ToString() + " DASH!");
         }
 
         public void Hit(PlayerController attacker)

@@ -13,6 +13,9 @@
         [Range(1f, 90f)]
         public float angularSpeed = 15f;
 
+        [Range(1f, 100f)]
+        public float dashDistance = 10f;
+
 #if UNITY_EDITOR
 
         [ReadOnly]
@@ -34,6 +37,12 @@
         }
 
         public Vector3 velocity
+        {
+            get;
+            private set;
+        }
+
+        public Vector3 dashVelocity
         {
             get;
             private set;
@@ -94,6 +103,12 @@
             this.velocity -= this.velocity * this.friction * deltaTime;
             this.velocity += this.acceleration * deltaTime;
 
+            if (this.dashVelocity.sqrMagnitude > 0f)
+            {
+                this.velocity += this.dashVelocity;
+                this.dashVelocity = Vector3.zero;
+            }
+
             // Velocity Verlet integration : http://lolengine.net/blog/2011/12/14/understanding-motion-in-games
             var speed = this.position + ((prevVelocity + this.velocity) / 0.5f) * deltaTime;
             speed.y = 0f;
@@ -103,7 +118,7 @@
             {
                 var angle = Mathf.Atan2(_verticalRot, _horizontalRot) * Mathf.Rad2Deg;
                 var newAngle = Quaternion.AngleAxis(angle + 90f, Vector3.up);
-                this.rotation = Quaternion.Slerp(this.rotation, newAngle, Time.deltaTime * this.angularSpeed);
+                this.rotation = Quaternion.Slerp(this.rotation, newAngle, deltaTime * this.angularSpeed);
             }
         }
 
@@ -120,7 +135,7 @@
 
         public void Dash()
         {
-
+            this.dashVelocity = this.velocity.normalized * this.dashDistance;
         }
     }
 }
