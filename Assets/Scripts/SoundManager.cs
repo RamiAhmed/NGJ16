@@ -1,47 +1,57 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿namespace Game
+{
+    using UnityEngine;
 
-public class SoundManager : MonoBehaviour {
-	
-	public AudioClip[] BackgroundMusic;
-	public AudioClip PlayerHit;
-	public AudioClip PlayerDash;
-	public AudioSource backgroundPlayer;
+    public class SoundManager : MonoBehaviour
+    {
+        public AudioClip[] backgroundMusic = new AudioClip[0];
+        public AudioClip playerHit;
+        public AudioClip playerDash;
+        public AudioSource backgroundPlayer;
 
-	private AudioClip nextTrack;
+        private AudioClip nextTrack;
 
-	// Use this for initialization
-	void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		QueueNextTrack();
-		PlayTrack();
-	}
+        // Use this for initialization
+        private void Start()
+        {
+        }
 
-	void PlayTrack() {
-		if(!backgroundPlayer.isPlaying) {
-			backgroundPlayer.clip = nextTrack;
-			backgroundPlayer.Play();
-			nextTrack = null;
-		}
-	}
+        // Update is called once per frame
+        private void Update()
+        {
+            QueueNextTrack();
+            PlayTrack();
+        }
 
-	AudioClip GetTrack() {
-		//TODO: Crazy logic here.
-		if(BackgroundMusic.Length > 0) {
-			
-			int idx = Random.Range(0, BackgroundMusic.Length);
-			print("Playing " + idx);
-			return BackgroundMusic[idx];
-		}
-		return null;
-	}
+        private void PlayTrack()
+        {
+            if (!backgroundPlayer.isPlaying)
+            {
+                backgroundPlayer.clip = nextTrack;
+                backgroundPlayer.Play();
+                nextTrack = null;
+            }
+        }
 
-	void QueueNextTrack() {
-		if(nextTrack == null) {
-			nextTrack = GetTrack();
-		}
-	}
+        private AudioClip GetTrack()
+        {
+            //TODO: Crazy logic here.
+            if (backgroundMusic.Length > 0)
+            {
+                int idx = Random.Range(0, backgroundMusic.Length);
+                print("Playing " + idx);
+                return backgroundMusic[idx];
+            }
+
+            return null;
+        }
+
+        private void QueueNextTrack()
+        {
+            if (nextTrack == null)
+            {
+                nextTrack = GetTrack();
+            }
+        }
+    }
 }
