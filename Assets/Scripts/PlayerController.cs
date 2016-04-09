@@ -20,6 +20,9 @@
         [Range(0.1f, 10f)]
         public float attackRadius = 1f;
 
+        [Range(0.1f, 2f)]
+        public float attackDuration = 0.8f;
+
         [Range(1f, 1000f)]
         public float hitPower = 10f;
 
@@ -146,6 +149,7 @@
             var newAngle = Quaternion.AngleAxis(angle + 90f, Vector3.up);
             var dir = newAngle * Vector3.forward;
             this.attackDirection = dir;
+            CoroutineHelper.instance.StartCoroutine(StopAttack());
 
             var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius, dir, this.attackRadius, Layers.instance.playerLayer);
             for (int i = 0; i < hits.Length; i++)
@@ -159,6 +163,12 @@
 
                 hit.transform.GetComponent<PlayerController>().Hit(this);
             }
+        }
+
+        private IEnumerator StopAttack()
+        {
+            yield return new WaitForSeconds(this.attackDuration);
+            this.attackDirection = Vector3.zero;
         }
 
         private void Repair()
