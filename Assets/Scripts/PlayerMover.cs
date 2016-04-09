@@ -23,6 +23,7 @@
 
 #endif
 
+        private Rigidbody _rb;
         private float _horizontalRot;
         private float _verticalRot;
 
@@ -50,6 +51,17 @@
             set { this.transform.position = value; }
         }
 
+        public Quaternion rotation
+        {
+            get;
+            set;
+        }
+
+        private void OnEnable()
+        {
+            _rb = this.GetComponent<Rigidbody>();
+        }
+
         private void Update()
         {
 #if UNITY_EDITOR
@@ -61,6 +73,11 @@
 
         private void FixedUpdate()
         {
+            if (_rb != null)
+            {
+                _rb.velocity = _rb.angularVelocity = Vector3.zero;
+            }
+
             var deltaTime = Time.deltaTime;
             var prevVelocity = this.velocity;
 
@@ -79,7 +96,7 @@
             {
                 var angle = Mathf.Atan2(_verticalRot, _horizontalRot) * Mathf.Rad2Deg;
                 var newAngle = Quaternion.AngleAxis(angle + 90f, Vector3.up);
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, newAngle, Time.deltaTime * this.angularSpeed);
+                this.rotation = Quaternion.Slerp(this.rotation, newAngle, Time.deltaTime * this.angularSpeed);
             }
         }
 
