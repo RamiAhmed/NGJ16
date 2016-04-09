@@ -54,7 +54,15 @@
                 _style.alignment = TextAnchor.MiddleCenter;
             }
 
-            GUI.Label(new Rect(5f, 5f, 100f, 50f), "Players Joined: " + _list.Count);
+            var count = _list.Count;
+            for (int i = 0; i < count; i++)
+            {
+                var idx = _list[i];
+                var texture = playerSetups[idx - 1].controllerUI;
+                var w = 100f;
+                var h = 80f;
+                GUI.DrawTexture(new Rect(w + (i * (w * 2f)), Screen.height - (h + (h * 0.5f)), w, h), texture);
+            }
 
             if (_starting)
             {
@@ -73,7 +81,6 @@
             {
                 if (Input.GetButtonDown(string.Concat("Start_", index)))
                 {
-                    Debug.Log("Start player " + index);
                     _list.Add(index);
                     var playerSetup = this.playerSetups[index - 1];
                     var playerGO = (GameObject)Instantiate(playerSetup.playerPrefab, playerSetup.playerStartPos.position, playerSetup.playerStartPos.rotation);

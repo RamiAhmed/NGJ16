@@ -130,7 +130,7 @@
                 return;
             }
 
-            Debug.Log(this.ToString() + " reflect off wall");
+            //Debug.Log(this.ToString() + " reflect off wall");
             _mover.Bounce(collision.contacts[0].normal);
         }
 
