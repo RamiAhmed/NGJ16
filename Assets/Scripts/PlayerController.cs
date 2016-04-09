@@ -31,11 +31,8 @@
         [Range(0.1f, 10f)]
         public float dashPerSecond = 1f;
 
-        public bool isHit
-        {
-            get;
-            private set;
-        }
+        [SerializeField, ReadOnly]
+        private bool _isVulnerable;
 
         private PlayerMover _mover;
         private float _lastAttack;
@@ -48,9 +45,13 @@
         private string horizontalRot = string.Empty;
         private string verticalRot = string.Empty;
         private string interact = string.Empty;
-
-        [SerializeField, ReadOnly]
         private string dash = string.Empty;
+
+        public bool isHit
+        {
+            get;
+            private set;
+        }
 
         private void OnEnable()
         {
@@ -209,16 +210,28 @@
 
         public void Hit(PlayerController attacker)
         {
+            if (_isVulnerable)
+            {
+                Debug.Log(this.ToString() + " killed by " + attacker.ToString());
+                OnDeath();
+                return;
+            }
+
             Debug.Log(this.ToString() + " hit by " + attacker.ToString());
             var dir = (this.transform.position - attacker.transform.position);
             _mover.input += dir * this.hitPower;
             this.isHit = true;
         }
 
-        public void Die()
+        public void OnTankDepleted()
         {
-            this.gameObject.SetActive(false);
+            _isVulnerable = true;
             Debug.Log(this.ToString() + " has died");
+        }
+
+        public void OnDeath()
+        {
+            CutsceneManager.instance.StartCutscene(this.gameObject);
         }
     }
 }

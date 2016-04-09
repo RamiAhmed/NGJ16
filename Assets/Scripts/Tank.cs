@@ -67,7 +67,7 @@
             this.current -= 1f / leakRate;
             if (this.current <= 0f)
             {
-                this.player.Die();
+                this.player.OnTankDepleted();
                 this.enabled = false;
             }
 
