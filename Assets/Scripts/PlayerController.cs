@@ -8,6 +8,8 @@
     [RequireComponent(typeof(SphereCollider))]
     public class PlayerController : MonoBehaviour
     {
+        private const float _velocityIsHitThresholdSqr = 1f;
+
         [Range(1, 3)]
         public int playerIndex = 1;
 
@@ -25,6 +27,12 @@
 
         [Range(0.1f, 10f)]
         public float repairRadius = 1f;
+
+        public bool isHit
+        {
+            get;
+            private set;
+        }
 
         private PlayerMover _mover;
         private float _lastAttack;
@@ -56,6 +64,11 @@
 
         private void Update()
         {
+            if (PauseManager.isPaused)
+            {
+                return;
+            }
+
             var horz = Input.GetAxis(this.horizontalPos);
             var vert = Input.GetAxis(this.verticalPos);
             if (horz != 0f || vert != 0f)
@@ -81,12 +94,25 @@
                 Repair();
             }
 
+            if (this.isHit)
+            {
+                if (_mover.velocity.sqrMagnitude < _velocityIsHitThresholdSqr)
+                {
+                    this.isHit = false;
+                }
+            }
+
             // TODO: DEBUG ONLY
             this.transform.rotation = _mover.rotation;
         }
 
         private void OnCollisionEnter(Collision collision)
         {
+            if (PauseManager.isPaused)
+            {
+                return;
+            }
+
             var other = collision.gameObject;
             if (((1 << other.layer) & Layers.instance.wallLayer) == 0)
             {
@@ -141,6 +167,7 @@
             Debug.Log(this.ToString() + " hit by " + attacker.ToString());
             var dir = (this.transform.position - attacker.transform.position);
             _mover.input += dir * this.hitPower;
+            this.isHit = true;
         }
 
         public void Die()

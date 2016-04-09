@@ -62,17 +62,24 @@
             _rb = this.GetComponent<Rigidbody>();
         }
 
+#if UNITY_EDITOR
+
         private void Update()
         {
-#if UNITY_EDITOR
             // Update values for convenience/readability
             this.maxSpeed = _acceleration / friction;
             this.timeToMaxSpeed = 2f / friction;
-#endif
         }
+
+#endif
 
         private void FixedUpdate()
         {
+            if (PauseManager.isPaused)
+            {
+                return;
+            }
+
             if (_rb != null)
             {
                 _rb.velocity = _rb.angularVelocity = Vector3.zero;

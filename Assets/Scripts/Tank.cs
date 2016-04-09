@@ -30,7 +30,7 @@
 
         private void Update()
         {
-            if (!this.isLeaking)
+            if (!this.isLeaking || PauseManager.isPaused)
             {
                 return;
             }
@@ -49,7 +49,7 @@
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (this.isLeaking)
+            if (this.isLeaking || PauseManager.isPaused)
             {
                 return;
             }
@@ -58,6 +58,12 @@
             if (((1 << other.layer) & Layers.instance.playerLayer) == 0)
             {
                 // not a player
+                return;
+            }
+
+            var player = other.GetComponent<PlayerController>();
+            if (!player.isHit)
+            {
                 return;
             }
 
