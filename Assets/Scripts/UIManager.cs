@@ -5,7 +5,7 @@
 
     public class UIManager : MonoBehaviour
     {
-        public string gameScene = "3DScene_Test1";
+        public string gameScene = "testlevel_2";
 
         public void OnClickStart()
         {
@@ -16,5 +16,12 @@
         {
             Application.Quit();
         }
+
+		void Update(){
+			if (Input.GetButtonDown("Reload")){
+				SceneManager.LoadScene ("testlevel_2");
+			}
+
+		}
     }
 }
