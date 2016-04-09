@@ -1,34 +1,40 @@
 ﻿namespace Game
 {
     using UnityEngine;
-	using System.Collections.Generic;
-
 
     public class SoundManager : MonoBehaviour
     {
-		public static SoundManager instance;
+        public static SoundManager instance { get; private set; }
 
-		public SoundFx[] soundFx;
+        public SoundFx[] soundFx;
         public AudioClip[] backgroundMusic = new AudioClip[0];
         public AudioSource backgroundPlayer;
-		public AudioSource fxPlayer;
+        public AudioSource fxPlayer;
 
-		[Range(0f, 1f)]
-		public float backgroundVolume = .5f;
-		[Range(0f,1f)]
-		public float fxVolume = 1f;
+        [Range(0f, 1f)]
+        public float backgroundVolume = .5f;
 
-        private AudioClip nextTrack;
+        [Range(0f, 1f)]
+        public float fxVolume = 1f;
 
-		private void Awake() {
-			if(instance != null)
-				GameObject.Destroy(instance);
-			instance = this;
-		}
+        private AudioClip _nextTrack;
 
-		private void Start() {
-			backgroundPlayer.priority = 0;
-		}
+        private void Awake()
+        {
+            if (instance != null)
+            {
+                Debug.LogWarning(this.ToString() + " another SoundManager has already been registered, destroying this one");
+                GameObject.Destroy(instance);
+                return;
+            }
+
+            instance = this;
+        }
+
+        private void Start()
+        {
+            backgroundPlayer.priority = 0;
+        }
 
         private void Update()
         {
@@ -36,32 +42,36 @@
             PlayTrack();
         }
 
-		public void PlayFx(SoundFxType fx) {
-			AudioClip[] clips = null;
-			// Currently only supports the first match. Don't be dumb ;-)
-			foreach(SoundFx sfx in soundFx) {
-				if(sfx.type == fx) {
-					clips = sfx.clips;
-					break;
-				}
-			}
+        public void PlayFx(SoundFxType fx)
+        {
+            AudioClip[] clips = null;
+            // Currently only supports the first match. Don't be dumb ;-)
+            foreach (SoundFx sfx in soundFx)
+            {
+                if (sfx.type == fx)
+                {
+                    clips = sfx.clips;
+                    break;
+                }
+            }
 
-			if(clips != null) {
-				fxPlayer.PlayOneShot(GetRandomClip(clips), fxVolume);
-			}
-		}
+            if (clips != null)
+            {
+                fxPlayer.PlayOneShot(GetRandomClip(clips), fxVolume);
+            }
+        }
 
         private void PlayTrack()
         {
             if (!backgroundPlayer.isPlaying)
             {
-                backgroundPlayer.clip = nextTrack;
+                backgroundPlayer.clip = _nextTrack;
                 backgroundPlayer.Play();
-                nextTrack = null;
+                _nextTrack = null;
             }
         }
 
-		private AudioClip GetRandomClip(AudioClip[] clips)
+        private AudioClip GetRandomClip(AudioClip[] clips)
         {
             //TODO: Crazy logic here.
             if (clips.Length > 0)
@@ -75,9 +85,9 @@
 
         private void QueueNextTrack()
         {
-            if (nextTrack == null)
+            if (_nextTrack == null)
             {
-				nextTrack = GetRandomClip(backgroundMusic);
+                _nextTrack = GetRandomClip(backgroundMusic);
             }
         }
     }
