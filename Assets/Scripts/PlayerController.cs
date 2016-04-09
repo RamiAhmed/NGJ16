@@ -44,6 +44,7 @@
         private string horizontalRot = string.Empty;
         private string verticalRot = string.Empty;
         private string interact = string.Empty;
+        private string dash = string.Empty;
 
         private void OnEnable()
         {
@@ -58,6 +59,7 @@
             this.horizontalRot = string.Concat("RotateHorizontal_", this.playerIndex);
             this.verticalRot = string.Concat("RotateVertical_", this.playerIndex);
             this.interact = string.Concat("Interact_", this.playerIndex);
+            this.dash = string.Concat("Dash_", this.playerIndex);
 
             _radius = this.GetComponent<SphereCollider>().radius;
         }
@@ -81,6 +83,11 @@
             if (hrot != 0f || vrot != 0f)
             {
                 _mover.Rotate(hrot, vrot);
+            }
+
+            if (Input.GetButtonDown(this.dash))
+            {
+                _mover.Dash();
             }
 
             var act = Input.GetAxis(this.interact);

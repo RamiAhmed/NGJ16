@@ -117,5 +117,10 @@
         {
             this.velocity = Vector3.Reflect(this.velocity, normal);
         }
+
+        public void Dash()
+        {
+
+        }
     }
 }
