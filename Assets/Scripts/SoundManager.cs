@@ -46,8 +46,9 @@
         {
             AudioClip[] clips = null;
             // Currently only supports the first match. Don't be dumb ;-)
-            foreach (SoundFx sfx in soundFx)
+            for (int i = 0; i < soundFx.Length; i++)
             {
+                var sfx = soundFx[i];
                 if (sfx.type == fx)
                 {
                     clips = sfx.clips;
