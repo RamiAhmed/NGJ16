@@ -58,8 +58,7 @@ namespace Game
                 Destroy(this.gameObject, 0.01f);
                 return;
             }
-
-            this.name = string.Concat("Player ", this.player.playerIndex, " Tank");
+            
             this.current = this.max;
         }
 
