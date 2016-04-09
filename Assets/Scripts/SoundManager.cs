@@ -6,6 +6,8 @@
 
     public class SoundManager : MonoBehaviour
     {
+		public static SoundManager instance;
+
 		public SoundFx[] soundFx;
         public AudioClip[] backgroundMusic = new AudioClip[0];
         public AudioSource backgroundPlayer;
@@ -17,6 +19,12 @@
 		public float fxVolume = 1f;
 
         private AudioClip nextTrack;
+
+		private void Awake() {
+			if(instance != null)
+				GameObject.Destroy(instance);
+			instance = this;
+		}
 
 		private void Start() {
 			backgroundPlayer.priority = 0;
@@ -38,9 +46,9 @@
 				}
 			}
 
-//			if(clips != null) {
-//				fxPlayer.PlayOneShot(GetRandomClip(clips), fxVolume);
-//			}
+			if(clips != null) {
+				fxPlayer.PlayOneShot(GetRandomClip(clips), fxVolume);
+			}
 		}
 
         private void PlayTrack()
