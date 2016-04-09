@@ -1,4 +1,6 @@
-﻿namespace Game
+﻿#pragma warning disable 0414
+
+namespace Game
 {
     using UnityEngine;
 
@@ -12,7 +14,7 @@
 
         public TankSeverity[] severityLevels = new TankSeverity[0];
 
-        [ReadOnly]
+        [SerializeField, ReadOnly]
         private float current = 0f;
 
         [SerializeField, ReadOnly]
@@ -25,10 +27,27 @@
 
 #endif
 
+        [SerializeField, ReadOnly]
+        private ParticleSystem _currentParticles;
+
+        private bool _isLeaking;
+
         public bool isLeaking
         {
-            get;
-            set;
+            get
+            {
+                return _isLeaking;
+            }
+
+            set
+            {
+                _isLeaking = value;
+                if (!_isLeaking && _currentParticles != null)
+                {
+                    // if no longer leaking and a particle system is playing, stop the system
+                    _currentParticles.Stop();
+                }
+            }
         }
 
         private void OnEnable()
@@ -54,9 +73,16 @@
             var leakRate = this.severityLevels[this.severityLevels.Length - 1].leakRatePerSecond;
             for (int i = 0; i < this.severityLevels.Length; i++)
             {
-                if (this.severityLevels[i].hits == _hits)
+                var severity = this.severityLevels[i];
+                if (severity.hits != _hits)
                 {
-                    leakRate = this.severityLevels[i].leakRatePerSecond;
+                    continue;
+                }
+
+                leakRate = severity.leakRatePerSecond;
+                if (severity.particles != null)
+                {
+                    PlayParticleSystem(severity.particles);
                 }
             }
 
@@ -69,6 +95,7 @@
             {
                 this.player.OnTankDepleted();
                 this.enabled = false;
+                _currentParticles.Stop();
             }
 
             // TODO: Debug ONLY
@@ -109,6 +136,23 @@
             {
                 Debug.Log(this.ToString() + " hits == " + _hits);
             }
+        }
+
+        private void PlayParticleSystem(ParticleSystem system)
+        {
+            if (ReferenceEquals(_currentParticles, system) && system.isPlaying)
+            {
+                // already playing the given system, so do not change or start anew
+                return;
+            }
+
+            if (_currentParticles != null)
+            {
+                _currentParticles.Stop();
+            }
+
+            _currentParticles = system;
+            _currentParticles.Play();
         }
     }
 }

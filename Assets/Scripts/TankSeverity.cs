@@ -11,5 +11,7 @@
 
         [Range(0.1f, 30f)]
         public float leakRatePerSecond = 2f;
+
+        public ParticleSystem particles;
     }
 }
