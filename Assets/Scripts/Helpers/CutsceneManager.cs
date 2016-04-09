@@ -16,7 +16,8 @@
         public float durationInSeconds = 3f;
 
         private bool _showing;
-        private Vector3 _focus;
+
+        //private Vector3 _focus;
         private GameObject _go;
 
         private void OnEnable()
@@ -58,7 +59,7 @@
             }
 
             _go = go;
-            _focus = go.transform.position;
+            //_focus = go.transform.position;
             _showing = true;
             Time.timeScale = this.slowTime;
 
