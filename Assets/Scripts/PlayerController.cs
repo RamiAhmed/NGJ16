@@ -9,7 +9,7 @@
     [RequireComponent(typeof(SphereCollider))]
     public class PlayerController : MonoBehaviour
     {
-        private const float _velocityIsHitThresholdSqr = 1f;
+        private const float _velocityIsHitThresholdSqr = 0.1f;
 
         [Range(1, 3)]
         public int playerIndex = 1;
@@ -110,14 +110,6 @@
             if (Input.GetButtonUp(this.dash))
             {
                 Dash();
-            }
-
-            if (this.isHit)
-            {
-                if (_mover.velocity.sqrMagnitude < _velocityIsHitThresholdSqr)
-                {
-                    this.isHit = false;
-                }
             }
         }
 
@@ -258,19 +250,33 @@
             }
 
             Debug.Log(this.ToString() + " hit by " + attacker.ToString());
-            var dir = (this.transform.position - attacker.transform.position);
-            _mover.input += dir * this.hitPower;
+            _mover.input += (this.transform.position - attacker.transform.position).normalized * this.hitPower;
+
             this.isHit = true;
+            CoroutineHelper.instance.StartCoroutine(SetHitFalse());
+        }
+
+        private IEnumerator SetHitFalse()
+        {
+            yield return new WaitForSeconds(0.1f);
+
+            while (_mover.velocity.sqrMagnitude > _velocityIsHitThresholdSqr)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            this.isHit = false;
         }
 
         public void OnTankDepleted()
         {
             _isVulnerable = true;
-            Debug.Log(this.ToString() + " has died");
+            Debug.Log(this.ToString() + " has an empty tank, and is now vulnerable");
         }
 
         public void OnDeath()
         {
+            Debug.Log(this.ToString() + " has died");
             CutsceneManager.instance.StartCutscene(this.gameObject);
         }
     }
