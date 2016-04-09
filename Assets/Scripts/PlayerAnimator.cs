@@ -74,6 +74,12 @@
                     _animator.SetBool(this.attackingDown, !up);
                 }
             }
+            else
+            {
+                _animator.SetBool(this.attacking, false);
+                _animator.SetBool(this.attackingUp, false);
+                _animator.SetBool(this.attackingDown, false);
+            }
 
             var dashDir = _mover.dashVelocity;
             if (dashDir.sqrMagnitude > dashDirThreshold)
