@@ -50,6 +50,12 @@
         private string interact = string.Empty;
         private string dash = string.Empty;
 
+        public Vector3 attackDirection
+        {
+            get;
+            private set;
+        }
+
         public bool isHit
         {
             get;
@@ -147,6 +153,7 @@
             var angle = Mathf.Atan2(vrot, hrot) * Mathf.Rad2Deg;
             var newAngle = Quaternion.AngleAxis(angle + 90f, Vector3.up);
             var dir = newAngle * Vector3.forward;
+            this.attackDirection = dir;
 
             var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius, dir, this.attackRadius, Layers.instance.playerLayer);
             for (int i = 0; i < hits.Length; i++)
