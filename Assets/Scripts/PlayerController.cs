@@ -87,17 +87,12 @@
 
             var hrot = Input.GetAxis(this.horizontalRot);
             var vrot = Input.GetAxis(this.verticalRot);
-            if (hrot != 0f || vrot != 0f)
+            if (Mathf.Abs(hrot) > 0.5f || Mathf.Abs(vrot) > 0.5f)
             {
-                _mover.Rotate(hrot, vrot);
+                Attack(hrot, vrot);
             }
 
             var act = Input.GetAxis(this.interact);
-            if (act == -1f)
-            {
-                Attack();
-            }
-
             if (act == 1f)
             {
                 Repair();
@@ -115,9 +110,6 @@
                     this.isHit = false;
                 }
             }
-
-            // TODO: DEBUG ONLY
-            this.transform.rotation = _mover.rotation;
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -138,7 +130,7 @@
             _mover.Bounce(collision.contacts[0].normal);
         }
 
-        private void Attack()
+        private void Attack(float hrot, float vrot)
         {
             var time = Time.timeSinceLevelLoad;
             if (time - _lastAttack < 1f / this.attacksPerSecond)
@@ -149,7 +141,10 @@
             _lastAttack = time;
             Debug.Log(string.Concat("Player ", this.playerIndex, " - Attack"));
 
-            var dir = _mover.rotation * Vector3.forward;
+            var angle = Mathf.Atan2(vrot, hrot) * Mathf.Rad2Deg;
+            var newAngle = Quaternion.AngleAxis(angle + 90f, Vector3.up);
+            var dir = newAngle * Vector3.forward;
+
             var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius, dir, this.attackRadius, Layers.instance.playerLayer);
             for (int i = 0; i < hits.Length; i++)
             {
@@ -175,8 +170,7 @@
             _lastRepair = time;
             Debug.Log(string.Concat("Player ", this.playerIndex, " - Repair"));
 
-            var dir = _mover.rotation * Vector3.forward;
-            var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius, dir, this.repairRadius, Layers.instance.tankLayer);
+            var hits = Physics.OverlapSphere(this.transform.position, _radius + this.repairRadius, Layers.instance.tankLayer);
             for (int i = 0; i < hits.Length; i++)
             {
                 var tank = hits[i].transform.GetComponent<Tank>();

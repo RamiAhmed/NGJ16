@@ -95,7 +95,10 @@ namespace Game
             {
                 this.player.OnTankDepleted();
                 this.enabled = false;
-                _currentParticles.Stop();
+                if (_currentParticles != null)
+                {
+                    _currentParticles.Stop();
+                }
             }
 
             // TODO: Debug ONLY
