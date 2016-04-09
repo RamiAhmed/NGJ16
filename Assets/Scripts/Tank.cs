@@ -41,6 +41,10 @@
                 this.player.Die();
                 this.enabled = false;
             }
+
+            // TODO: Debug ONLY
+            var frac = this.current / this.max;
+            this.GetComponent<Renderer>().material.color = new Color(frac, frac, frac);
         }
 
         private void OnCollisionEnter(Collision collision)
