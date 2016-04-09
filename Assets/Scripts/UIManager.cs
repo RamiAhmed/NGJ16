@@ -17,11 +17,12 @@
             Application.Quit();
         }
 
-		void Update(){
-			if (Input.GetButtonDown("Reload")){
-				SceneManager.LoadScene ("testlevel_2");
-			}
-
-		}
+        private void Update()
+        {
+            if (Input.GetButtonDown("Reload"))
+            {
+                SceneManager.LoadScene("testlevel_2");
+            }
+        }
     }
 }

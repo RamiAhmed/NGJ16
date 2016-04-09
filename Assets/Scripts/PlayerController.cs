@@ -1,6 +1,7 @@
 ﻿namespace Game
 {
     using System;
+    using System.Collections;
     using UnityEngine;
 
     [RequireComponent(typeof(PlayerMover))]
@@ -30,6 +31,8 @@
 
         [Range(0.1f, 10f)]
         public float dashPerSecond = 1f;
+
+        public GameObject onHitParticleSystemGO;
 
         [SerializeField, ReadOnly]
         private bool _isVulnerable;
@@ -87,17 +90,12 @@
 
             var hrot = Input.GetAxis(this.horizontalRot);
             var vrot = Input.GetAxis(this.verticalRot);
-            if (hrot != 0f || vrot != 0f)
+            if (Mathf.Abs(hrot) > 0.5f || Mathf.Abs(vrot) > 0.5f)
             {
-                _mover.Rotate(hrot, vrot);
+                Attack(hrot, vrot);
             }
 
             var act = Input.GetAxis(this.interact);
-            if (act == -1f)
-            {
-                Attack();
-            }
-
             if (act == 1f)
             {
                 Repair();
@@ -115,9 +113,6 @@
                     this.isHit = false;
                 }
             }
-
-            // TODO: DEBUG ONLY
-            this.transform.rotation = _mover.rotation;
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -138,7 +133,7 @@
             _mover.Bounce(collision.contacts[0].normal);
         }
 
-        private void Attack()
+        private void Attack(float hrot, float vrot)
         {
             var time = Time.timeSinceLevelLoad;
             if (time - _lastAttack < 1f / this.attacksPerSecond)
@@ -149,7 +144,10 @@
             _lastAttack = time;
             Debug.Log(string.Concat("Player ", this.playerIndex, " - Attack"));
 
-            var dir = _mover.rotation * Vector3.forward;
+            var angle = Mathf.Atan2(vrot, hrot) * Mathf.Rad2Deg;
+            var newAngle = Quaternion.AngleAxis(angle + 90f, Vector3.up);
+            var dir = newAngle * Vector3.forward;
+
             var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius, dir, this.attackRadius, Layers.instance.playerLayer);
             for (int i = 0; i < hits.Length; i++)
             {
@@ -175,8 +173,7 @@
             _lastRepair = time;
             Debug.Log(string.Concat("Player ", this.playerIndex, " - Repair"));
 
-            var dir = _mover.rotation * Vector3.forward;
-            var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius, dir, this.repairRadius, Layers.instance.tankLayer);
+            var hits = Physics.OverlapSphere(this.transform.position, _radius + this.repairRadius, Layers.instance.tankLayer);
             for (int i = 0; i < hits.Length; i++)
             {
                 var tank = hits[i].transform.GetComponent<Tank>();
@@ -203,6 +200,36 @@
             Debug.Log(this.ToString() + " DASH!");
         }
 
+        private IEnumerator RemoveGameObject(GameObject go, float duration)
+        {
+            yield return new WaitForEndOfFrame();
+            Destroy(go, duration);
+        }
+
+        private void PlayParticleSystems(GameObject go)
+        {
+            var systems = go.GetComponentsInChildren<ParticleSystem>();
+            if (systems.Length == 0)
+            {
+                Debug.LogError(this.ToString() + " GameObject: " + go.ToString() + " has no particle systems");
+                return;
+            }
+
+            var longestDuration = systems[0].duration;
+            for (int i = 0; i < systems.Length; i++)
+            {
+                var system = systems[i];
+                system.Play();
+
+                if (longestDuration < system.duration)
+                {
+                    longestDuration = system.duration;
+                }
+            }
+
+            CoroutineHelper.instance.StartCoroutine(RemoveGameObject(go, longestDuration));
+        }
+
         public void Bounce(Vector3 normal)
         {
             _mover.Bounce(normal);
@@ -210,6 +237,12 @@
 
         public void Hit(PlayerController attacker)
         {
+            if (this.onHitParticleSystemGO != null)
+            {
+                var systemGO = (GameObject)Instantiate(this.onHitParticleSystemGO, this.transform.position, this.transform.rotation);
+                PlayParticleSystems(systemGO);
+            }
+
             if (_isVulnerable)
             {
                 Debug.Log(this.ToString() + " killed by " + attacker.ToString());

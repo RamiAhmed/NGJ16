@@ -28,8 +28,6 @@
 #endif
 
         private Rigidbody _rb;
-        private float _horizontalRot;
-        private float _verticalRot;
 
         public Vector3 input
         {
@@ -59,12 +57,6 @@
         {
             get { return this.transform.position; }
             set { this.transform.position = value; }
-        }
-
-        public Quaternion rotation
-        {
-            get;
-            set;
         }
 
         private void OnEnable()
@@ -116,19 +108,6 @@
 
             // We set the velocity on the rigidbody so as to utilize Unity collision detection, this in turn means that we do not multiply by deltaTime as this is done internally in rigidbody
             _rb.velocity = speed;
-
-            if (_horizontalRot != 0f || _verticalRot != 0f)
-            {
-                var angle = Mathf.Atan2(_verticalRot, _horizontalRot) * Mathf.Rad2Deg;
-                var newAngle = Quaternion.AngleAxis(angle + 90f, Vector3.up);
-                this.rotation = Quaternion.Slerp(this.rotation, newAngle, deltaTime * this.angularSpeed);
-            }
-        }
-
-        public void Rotate(float horizontal, float vertical)
-        {
-            _horizontalRot = horizontal;
-            _verticalRot = vertical;
         }
 
         public void Bounce(Vector3 normal)
