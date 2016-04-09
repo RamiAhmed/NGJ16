@@ -90,6 +90,7 @@
             var other = collision.gameObject;
             if (((1 << other.layer) & Layers.instance.wallLayer) == 0)
             {
+                // not a wall
                 return;
             }
 
@@ -139,6 +140,11 @@
             Debug.Log(this.ToString() + " hit by " + attacker.ToString());
             var dir = (this.transform.position - attacker.transform.position);
             _mover.input += dir * this.hitPower;
+        }
+
+        public void Die()
+        {
+            Debug.Log(this.ToString() + " has died");
         }
     }
 }
