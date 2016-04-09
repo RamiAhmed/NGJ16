@@ -5,12 +5,24 @@
 
     public class PlayerController : MonoBehaviour
     {
+        [Range(1, 3)]
         public int playerIndex = 1;
 
-        private PlayerMover _mover;
+        [Range(0.1f, 10f)]
+        public float attacksPerSecond = 1f;
 
-        private string horizontal = string.Empty;
-        private string vertical = string.Empty;
+        [Range(0.1f, 10f)]
+        public float repairPerSecond = 1f;
+
+        private PlayerMover _mover;
+        private float _lastAttack;
+        private float _lastRepair;
+
+        private string horizontalPos = string.Empty;
+        private string verticalPos = string.Empty;
+        private string horizontalRot = string.Empty;
+        private string verticalRot = string.Empty;
+        private string interact = string.Empty;
 
         private void OnEnable()
         {
@@ -20,18 +32,63 @@
                 throw new ArgumentNullException("_mover");
             }
 
-            this.horizontal = string.Concat("Horizontal_", this.playerIndex);
-            this.vertical = string.Concat("Vertical_", this.playerIndex);
+            this.horizontalPos = string.Concat("Horizontal_", this.playerIndex);
+            this.verticalPos = string.Concat("Vertical_", this.playerIndex);
+            this.horizontalRot = string.Concat("RotateHorizontal_", this.playerIndex);
+            this.verticalRot = string.Concat("RotateVertical_", this.playerIndex);
+            this.interact = string.Concat("Interact_", this.playerIndex);
         }
 
         private void Update()
         {
-            var horz = Input.GetAxis(this.horizontal);
-            var vert = Input.GetAxis(this.vertical);
+            var horz = Input.GetAxis(this.horizontalPos);
+            var vert = Input.GetAxis(this.verticalPos);
             if (horz != 0f || vert != 0f)
             {
                 _mover.input = new Vector3(horz, 0f, -vert);
             }
+
+            var hrot = Input.GetAxis(this.horizontalRot);
+            var vrot = Input.GetAxis(this.verticalRot);
+            if (hrot != 0f || vrot != 0f)
+            {
+                _mover.Rotate(hrot, vrot);
+            }
+
+            var act = Input.GetAxis(this.interact);
+            if (act == -1f)
+            {
+                Attack();
+            }
+
+            if (act == 1f)
+            {
+                Repair();
+            }
+        }
+
+        public void Attack()
+        {
+            var time = Time.timeSinceLevelLoad;
+            if (time - _lastAttack < 1f / this.attacksPerSecond)
+            {
+                return;
+            }
+
+            _lastAttack = time;
+            Debug.Log(string.Concat("Player ", this.playerIndex, " - Attack"));
+        }
+
+        public void Repair()
+        {
+            var time = Time.timeSinceLevelLoad;
+            if (time - _lastRepair < 1f / this.repairPerSecond)
+            {
+                return;
+            }
+
+            _lastRepair = time;
+            Debug.Log(string.Concat("Player ", this.playerIndex, " - Repair"));
         }
     }
 }
