@@ -160,6 +160,20 @@
 
             _lastRepair = time;
             Debug.Log(string.Concat("Player ", this.playerIndex, " - Repair"));
+
+            var dir = _mover.rotation * Vector3.forward;
+            var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius, dir, this.repairRadius, Layers.instance.tankLayer);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                var tank = hits[i].transform.GetComponent<Tank>();
+                if (!ReferenceEquals(tank.player, this))
+                {
+                    // ignore anyone but "self"
+                    continue;
+                }
+
+                tank.isLeaking = false;
+            }
         }
 
         public void Hit(PlayerController attacker)
