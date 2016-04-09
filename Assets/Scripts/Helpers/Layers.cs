@@ -4,7 +4,7 @@
 
     public class Layers : MonoBehaviour
     {
-        public static Layers instance;
+        public static Layers instance { get; private set; }
 
         public LayerMask playerLayer;
         public LayerMask tankLayer;
