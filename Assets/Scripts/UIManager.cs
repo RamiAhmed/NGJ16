@@ -5,9 +5,11 @@
 
     public class UIManager : MonoBehaviour
     {
+        public string gameScene = "3DScene_Test1";
+
         public void OnClickStart()
         {
-            SceneManager.LoadScene("3DScene_Test1");
+            SceneManager.LoadScene(this.gameScene);
         }
 
         public void OnClickExit()
