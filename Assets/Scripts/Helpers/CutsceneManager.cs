@@ -1,6 +1,5 @@
 ﻿namespace Game
 {
-    using System;
     using System.Collections;
     using UnityEngine;
 
@@ -24,7 +23,7 @@
         {
             if (this.texture == null)
             {
-                throw new ArgumentNullException("texture");
+                Debug.LogWarning(this.ToString() + " is missing an overlay texture");
             }
 
             if (instance != null)
