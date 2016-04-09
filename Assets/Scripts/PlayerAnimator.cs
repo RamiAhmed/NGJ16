@@ -1,5 +1,6 @@
 ﻿namespace Game
 {
+    using System;
     using UnityEngine;
 
     [RequireComponent(typeof(Animator))]
@@ -9,15 +10,11 @@
     {
         private const float attackDirThreshold = 0.1f;
 
-        public string walkingLeft = "WalkingLeft";
-
-        public string walkingRight = "WalkingRight";
+        public string walking = "Walking";
 
         public string attackingUp = "AttackUp";
-
-        public string attackingRight = "AttackRight";
-
-        public string attackingLeft = "AttackLeft";
+        
+        public string attacking = "AttackSideways";
 
         public string attackingDown = "AttackDown";
 
@@ -30,9 +27,16 @@
         private PlayerMover _mover;
         private PlayerController _player;
         private Animator _animator;
+        private SpriteRenderer _spriteRenderer;
 
         private void OnEnable()
         {
+            _spriteRenderer = this.GetComponentInChildren<SpriteRenderer>();
+            if (_spriteRenderer == null)
+            {
+                throw new ArgumentNullException("_spriteRenderer");
+            }
+
             _mover = this.GetComponent<PlayerMover>();
             _player = this.GetComponent<PlayerController>();
             _animator = this.GetComponent<Animator>();
@@ -41,22 +45,25 @@
         private void Update()
         {
             var velocity = _mover.velocity;
-            if (velocity.sqrMagnitude > 0f)
+            var walking = velocity.sqrMagnitude > 0f;
+            _animator.SetBool(this.walking, walking);
+            if (walking)
             {
                 var left = velocity.x < 0f;
-                _animator.SetBool(this.walkingLeft, left);
-                _animator.SetBool(this.walkingLeft, !left);
+                _spriteRenderer.flipX = left;
             }
 
             var attackDir = _player.attackDirection;
             if (attackDir.sqrMagnitude > 0f)
             {
-                if (Mathf.Abs(attackDir.x) > attackDirThreshold)
+                var attackSideways = Mathf.Abs(attackDir.x) > attackDirThreshold;
+                _animator.SetBool(this.attacking, attackSideways);
+                if (attackSideways)
                 {
                     // sideways attacks are prioritized first
                     var left = attackDir.x < 0f;
-                    _animator.SetBool(this.attackingLeft, left);
-                    _animator.SetBool(this.attackingRight, !left);
+                    _spriteRenderer.flipX = left;
+                    // TODO: This needs to prevent "walking flipping" for at least a second or so
                 }
                 else if (Mathf.Abs(attackDir.z) > attackDirThreshold)
                 {
