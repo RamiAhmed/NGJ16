@@ -6,7 +6,7 @@
     {
         public static SoundManager instance { get; private set; }
 
-        public SoundFx[] soundFx;
+        public SoundFx[] soundFx = new SoundFx[0];
         public AudioClip[] backgroundMusic = new AudioClip[0];
         public AudioSource backgroundPlayer;
         public AudioSource fxPlayer;

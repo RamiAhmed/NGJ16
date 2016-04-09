@@ -209,12 +209,25 @@
         private void PlayParticleSystems(GameObject go)
         {
             var systems = go.GetComponentsInChildren<ParticleSystem>();
+            if (systems.Length == 0)
+            {
+                Debug.LogError(this.ToString() + " GameObject: " + go.ToString() + " has no particle systems");
+                return;
+            }
+
+            var longestDuration = systems[0].duration;
             for (int i = 0; i < systems.Length; i++)
             {
                 var system = systems[i];
                 system.Play();
-                CoroutineHelper.instance.StartCoroutine(RemoveGameObject(system.gameObject, system.duration));
+
+                if (longestDuration < system.duration)
+                {
+                    longestDuration = system.duration;
+                }
             }
+
+            CoroutineHelper.instance.StartCoroutine(RemoveGameObject(go, longestDuration));
         }
 
         public void Bounce(Vector3 normal)
