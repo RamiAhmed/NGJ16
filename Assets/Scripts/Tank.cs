@@ -10,11 +10,20 @@
         [Range(10f, 1000f)]
         public float max = 100f;
 
-        [Range(0.1f, 20f)]
-        public float leakRatePerSecond = 2f;
+        public TankSeverity[] severityLevels = new TankSeverity[0];
 
         [ReadOnly]
         private float current = 0f;
+
+        [SerializeField, ReadOnly]
+        private int _hits = 0;
+
+#if UNITY_EDITOR
+
+        [SerializeField, ReadOnly]
+        private float _currentLeakRate;
+
+#endif
 
         public bool isLeaking
         {
@@ -24,6 +33,13 @@
 
         private void OnEnable()
         {
+            if (this.severityLevels.Length == 0)
+            {
+                Debug.LogError(this.ToString() + " must have at least one severity level");
+                Destroy(this.gameObject, 0.01f);
+                return;
+            }
+
             this.name = string.Concat("Player ", this.player.playerIndex, " Tank");
             this.current = this.max;
         }
@@ -35,7 +51,20 @@
                 return;
             }
 
-            this.current -= 1f / this.leakRatePerSecond;
+            var leakRate = this.severityLevels[this.severityLevels.Length - 1].leakRatePerSecond;
+            for (int i = 0; i < this.severityLevels.Length; i++)
+            {
+                if (this.severityLevels[i].hits == _hits)
+                {
+                    leakRate = this.severityLevels[i].leakRatePerSecond;
+                }
+            }
+
+#if UNITY_EDITOR
+            _currentLeakRate = leakRate;
+#endif
+
+            this.current -= 1f / leakRate;
             if (this.current <= 0f)
             {
                 this.player.Die();
@@ -49,7 +78,7 @@
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (this.isLeaking || PauseManager.isPaused)
+            if (PauseManager.isPaused)
             {
                 return;
             }
@@ -67,10 +96,19 @@
                 return;
             }
 
-            Debug.Log(this.ToString() + " start leaking");
             var normal = (player.transform.position - this.transform.position).normalized;
             player.Bounce(normal);
-            this.isLeaking = true;
+
+            _hits++;
+            if (!this.isLeaking)
+            {
+                this.isLeaking = true;
+                Debug.Log(this.ToString() + " start leaking");
+            }
+            else
+            {
+                Debug.Log(this.ToString() + " hits == " + _hits);
+            }
         }
     }
 }
