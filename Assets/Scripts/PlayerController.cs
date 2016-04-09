@@ -1,6 +1,7 @@
 ﻿namespace Game
 {
     using System;
+    using System.Collections;
     using UnityEngine;
 
     [RequireComponent(typeof(PlayerMover))]
@@ -30,6 +31,8 @@
 
         [Range(0.1f, 10f)]
         public float dashPerSecond = 1f;
+
+        public GameObject onHitParticleSystemGO;
 
         [SerializeField, ReadOnly]
         private bool _isVulnerable;
@@ -197,6 +200,23 @@
             Debug.Log(this.ToString() + " DASH!");
         }
 
+        private IEnumerator RemoveGameObject(GameObject go, float duration)
+        {
+            yield return new WaitForEndOfFrame();
+            Destroy(go, duration);
+        }
+
+        private void PlayParticleSystems(GameObject go)
+        {
+            var systems = go.GetComponentsInChildren<ParticleSystem>();
+            for (int i = 0; i < systems.Length; i++)
+            {
+                var system = systems[i];
+                system.Play();
+                CoroutineHelper.instance.StartCoroutine(RemoveGameObject(system.gameObject, system.duration));
+            }
+        }
+
         public void Bounce(Vector3 normal)
         {
             _mover.Bounce(normal);
@@ -204,6 +224,12 @@
 
         public void Hit(PlayerController attacker)
         {
+            if (this.onHitParticleSystemGO != null)
+            {
+                var systemGO = (GameObject)Instantiate(this.onHitParticleSystemGO, this.transform.position, this.transform.rotation);
+                PlayParticleSystems(systemGO);
+            }
+
             if (_isVulnerable)
             {
                 Debug.Log(this.ToString() + " killed by " + attacker.ToString());
