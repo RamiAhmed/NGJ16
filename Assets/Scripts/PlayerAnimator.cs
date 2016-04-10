@@ -46,7 +46,7 @@
             _animator = this.GetComponent<Animator>();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             HandleWalking();
             HandleAttacking();
