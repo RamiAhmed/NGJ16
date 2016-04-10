@@ -1,5 +1,6 @@
 ﻿namespace Game
 {
+    using System.Collections;
     using UnityEngine;
 
     [RequireComponent(typeof(Rigidbody))]
@@ -45,6 +46,12 @@
         }
 
         public Vector3 dashVelocity
+        {
+            get;
+            private set;
+        }
+
+        public Vector3 lastDashDirection
         {
             get;
             private set;
@@ -126,9 +133,16 @@
 
         public void Dash()
         {
-            // Do we want dash to move in the rotation direction or the velocity direction ?
-            //this.dashVelocity = (this.rotation * Vector3.forward) * this.dashDistance;
             this.dashVelocity = this.velocity.normalized * this.dashDistance;
+            this.lastDashDirection = this.dashVelocity;
+
+            CoroutineHelper.instance.StartCoroutine(StopLastDash());
+        }
+
+        private IEnumerator StopLastDash()
+        {
+            yield return new WaitForSeconds(0.8f);
+            this.lastDashDirection = Vector3.zero;
         }
     }
 }

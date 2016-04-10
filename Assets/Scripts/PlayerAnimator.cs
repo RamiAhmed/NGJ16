@@ -55,7 +55,7 @@
 
         private bool HandleDashing()
         {
-            var dashDir = _mover.dashVelocity;
+            var dashDir = _mover.lastDashDirection;
             if (dashDir.sqrMagnitude > dashDirThreshold)
             {
                 var dashSideways = Mathf.Abs(dashDir.x) > dashDirThreshold;
