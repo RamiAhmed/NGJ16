@@ -121,6 +121,17 @@
                 this.dashVelocity = Vector3.zero;
             }
 
+            var prevSqr = prevVelocity.sqrMagnitude;
+            var velSqr = this.velocity.sqrMagnitude;
+            if (prevSqr < 1f && velSqr > 1f)
+            {
+                SoundManager.instance.StartFx(SoundFxType.PlayerMove);
+            }
+            else if (prevSqr > 1f && velSqr < 1f)
+            {
+                SoundManager.instance.StopFx(SoundFxType.PlayerMove);
+            }
+
             // Velocity Verlet integration : http://lolengine.net/blog/2011/12/14/understanding-motion-in-games
             var speed = ((prevVelocity + this.velocity) / 0.5f);
             speed.y = 0f;
