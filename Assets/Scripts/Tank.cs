@@ -128,12 +128,13 @@ namespace Game
             var normal = (player.transform.position - this.transform.position).normalized;
             player.Bounce(normal);
 
+            ScoreboardManager.instance.Get(player).tankHits++;
             SoundManager.instance.PlayFx(SoundFxType.TankHit);
             _hits++;
             if (!this.isLeaking)
             {
                 this.isLeaking = true;
-				SpeakerManager.instance.Announce(Announcement.TankHit);
+                SpeakerManager.instance.Announce(Announcement.TankHit);
                 Debug.Log(this.ToString() + " start leaking");
             }
             else

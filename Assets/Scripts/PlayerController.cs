@@ -143,6 +143,7 @@
 
             //Debug.Log(this.ToString() + " reflect off wall");
             _mover.Bounce(collision.contacts[0].normal);
+            ScoreboardManager.instance.Get(this).wallBounces++;
         }
 
         private void OnDisable()
@@ -178,6 +179,8 @@
                 }
 
                 hit.transform.GetComponent<PlayerController>().Hit(this);
+
+                ScoreboardManager.instance.Get(this).enemyHits++;
             }
 
             SoundManager.instance.PlayFx(SoundFxType.PlayerSwing);
@@ -217,7 +220,7 @@
 
         private void Dash()
         {
-            var time = Time.time;
+            var time = Time.timeSinceLevelLoad;
             if (time - _lastDash < 1f / this.dashPerSecond)
             {
                 return;

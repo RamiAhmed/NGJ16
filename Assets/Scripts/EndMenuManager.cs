@@ -28,6 +28,7 @@
         {
             this.transform.GetChild(0).gameObject.SetActive(true);
             PauseManager.isPaused = true;
+            ScoreboardManager.instance.SetScoreText();
         }
 
         public void Restart()
