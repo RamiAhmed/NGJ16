@@ -59,25 +59,28 @@
             if (dashDir.sqrMagnitude > dashDirThreshold)
             {
                 var dashSideways = Mathf.Abs(dashDir.x) > dashDirThreshold;
-                _animator.SetBool(this.dashingSideways, dashSideways);
                 if (dashSideways)
                 {
+                    _animator.SetTrigger(this.dashingSideways);
                     var left = dashDir.x < 0f;
                     _spriteRenderer.flipX = left;
                 }
                 else if (Mathf.Abs(dashDir.z) > dashDirThreshold)
                 {
                     var up = dashDir.z > 0f;
-                    _animator.SetBool(this.dashingUp, up);
-                    _animator.SetBool(this.dashingDown, !up);
+                    if (up)
+                    {
+                        _animator.SetTrigger(this.dashingUp);
+                    }
+                    else
+                    {
+                        _animator.SetTrigger(this.dashingDown);
+                    }
                 }
 
                 return true;
             }
 
-            _animator.SetBool(this.dashingSideways, false);
-            _animator.SetBool(this.dashingUp, false);
-            _animator.SetBool(this.dashingDown, false);
             return false;
         }
 
