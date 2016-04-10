@@ -48,15 +48,53 @@
 
         private void Update()
         {
-            var velocity = _mover.velocity;
-            var walking = velocity.sqrMagnitude > moveThreshold;
-            _animator.SetBool(this.walking, walking);
-            if (walking)
+            if (!HandleDashing())
             {
-                var left = velocity.x < 0f;
-                _spriteRenderer.flipX = left;
+                // if not dashing, check for walking
+                HandleWalking();
+            }
+            else
+            {
+                // if dashing, we are definitely not walking
+                _animator.SetBool(this.walking, false);
             }
 
+            // check whether we need to handle attacking
+            HandleAttacking();
+
+            _animator.SetBool(this.hit, _player.isHit);
+        }
+
+        private bool HandleDashing()
+        {
+            var dashDir = _mover.dashVelocity;
+            if (dashDir.sqrMagnitude > dashDirThreshold)
+            {
+                var dashSideways = Mathf.Abs(dashDir.x) > dashDirThreshold;
+                _animator.SetBool(this.dashingSideways, dashSideways);
+                if (dashSideways)
+                {
+                    var left = dashDir.x < 0f;
+                    _spriteRenderer.flipX = left;
+                }
+                else if (Mathf.Abs(dashDir.z) > dashDirThreshold)
+                {
+                    var up = dashDir.z > 0f;
+                    _animator.SetBool(this.dashingUp, up);
+                    _animator.SetBool(this.dashingDown, !up);
+                }
+
+                return true;
+            }
+
+            _animator.SetBool(this.dashingSideways, false);
+            _animator.SetBool(this.dashingUp, false);
+            _animator.SetBool(this.dashingDown, false);
+            return false;
+        }
+
+        private bool HandleAttacking()
+        {
             var attackDir = _player.attackDirection;
             if (attackDir.sqrMagnitude > attackDirThreshold)
             {
@@ -75,39 +113,28 @@
                     _animator.SetBool(this.attackingUp, up);
                     _animator.SetBool(this.attackingDown, !up);
                 }
-            }
-            else
-            {
-                _animator.SetBool(this.attackingSideways, false);
-                _animator.SetBool(this.attackingUp, false);
-                _animator.SetBool(this.attackingDown, false);
+
+                return true;
             }
 
-            var dashDir = _mover.dashVelocity;
-            if (dashDir.sqrMagnitude > dashDirThreshold)
+            _animator.SetBool(this.attackingSideways, false);
+            _animator.SetBool(this.attackingUp, false);
+            _animator.SetBool(this.attackingDown, false);
+            return false;
+        }
+
+        private bool HandleWalking()
+        {
+            var velocity = _mover.velocity;
+            var walking = velocity.sqrMagnitude > moveThreshold;
+            _animator.SetBool(this.walking, walking);
+            if (walking)
             {
-                var dashSideways = Mathf.Abs(dashDir.x) > dashDirThreshold;
-                _animator.SetBool(this.dashingSideways, dashSideways);
-                if (dashSideways)
-                {
-                    var left = dashDir.x < 0f;
-                    _spriteRenderer.flipX = left;
-                }
-                else if (Mathf.Abs(dashDir.z) > dashDirThreshold)
-                {
-                    var up = dashDir.z > 0f;
-                    _animator.SetBool(this.dashingUp, up);
-                    _animator.SetBool(this.dashingDown, !up);
-                }
-            }
-            else
-            {
-                _animator.SetBool(this.dashingSideways, false);
-                _animator.SetBool(this.dashingUp, false);
-                _animator.SetBool(this.dashingDown, false);
+                var left = velocity.x < 0f;
+                _spriteRenderer.flipX = left;
             }
 
-            _animator.SetBool(this.hit, _player.isHit);
+            return walking;
         }
     }
 }
