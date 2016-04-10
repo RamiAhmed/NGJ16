@@ -31,6 +31,8 @@
         private Animator _animator;
         private SpriteRenderer _spriteRenderer;
 
+        private float _lastDash;
+
         private void OnEnable()
         {
             _spriteRenderer = this.GetComponentInChildren<SpriteRenderer>();
@@ -55,6 +57,14 @@
 
         private bool HandleDashing()
         {
+            var time = Time.timeSinceLevelLoad;
+            if (time - _lastDash < _mover.dashDuration)
+            {
+                return false;
+            }
+
+            _lastDash = time;
+
             var dashDir = _mover.lastDashDirection;
             if (dashDir.sqrMagnitude > dashDirThreshold)
             {
