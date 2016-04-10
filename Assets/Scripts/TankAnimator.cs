@@ -8,6 +8,7 @@
     {
         public string leaking = "Leaking";
         public string levels = "Levels";
+        public string patched = "Patched";
 
         private Tank _tank;
         private Animator _animator;
@@ -26,6 +27,7 @@
         private void Update()
         {
             _animator.SetBool(this.leaking, _tank.isLeaking);
+            _animator.SetBool(this.patched, !_tank.isLeaking && _tank.current < _tank.max);
             _animator.SetFloat(this.levels, _tank.current);
         }
     }
