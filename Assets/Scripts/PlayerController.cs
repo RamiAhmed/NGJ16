@@ -36,12 +36,16 @@
         [Range(0.1f, 10f)]
         public float dashPerSecond = 1f;
 
+        [Range(0.01f, 10f)]
+        public float dashDuration = 0.6f;
+
         public GameObject onHitParticleSystemGO;
 
         [SerializeField, ReadOnly]
         private bool _isVulnerable;
 
         private PlayerMover _mover;
+        private PlayerAnimator _animator;
         private float _lastAttack;
         private float _lastRepair;
         private float _lastDash;
@@ -72,6 +76,12 @@
             if (_mover == null)
             {
                 throw new ArgumentNullException("_mover");
+            }
+
+            _animator = this.GetComponent<PlayerAnimator>();
+            if (_animator == null)
+            {
+                throw new ArgumentNullException("_animator");
             }
 
             this.horizontalPos = string.Concat("Horizontal_", this.playerIndex);
@@ -201,7 +211,7 @@
                 }
 
                 tank.isLeaking = false;
-				SpeakerManager.instance.Announce(Announcement.TankRepaired);
+                SpeakerManager.instance.Announce(Announcement.TankRepaired);
             }
         }
 
@@ -214,9 +224,16 @@
             }
 
             _lastDash = time;
-            _mover.Dash();
+            _animator.Dash(_mover.Dash());
+            CoroutineHelper.instance.StartCoroutine(StopDash());
             SoundManager.instance.PlayFx(SoundFxType.PlayerDash);
             Debug.Log(this.ToString() + " DASH!");
+        }
+
+        private IEnumerator StopDash()
+        {
+            yield return new WaitForSeconds(this.dashDuration);
+            _animator.StopDash();
         }
 
         private IEnumerator RemoveGameObject(GameObject go, float duration)
@@ -292,15 +309,15 @@
         public void OnTankDepleted()
         {
             _isVulnerable = true;
-			SpeakerManager.instance.Announce(Announcement.TankEmpty);
+            SpeakerManager.instance.Announce(Announcement.TankEmpty);
             Debug.Log(this.ToString() + " has an empty tank, and is now vulnerable");
         }
 
         public void OnDeath()
         {
             Debug.Log(this.ToString() + " has died");
-			SoundManager.instance.PlayFx(SoundFxType.PlayerDeath);
-			SpeakerManager.instance.Announce(Announcement.PlayerKilled);
+            SoundManager.instance.PlayFx(SoundFxType.PlayerDeath);
+            SpeakerManager.instance.Announce(Announcement.PlayerKilled);
             CutsceneManager.instance.StartCutscene(this.gameObject);
         }
     }

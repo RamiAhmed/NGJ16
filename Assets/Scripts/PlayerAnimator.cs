@@ -48,48 +48,41 @@
 
         private void Update()
         {
-            HandleDashing();
             HandleWalking();
             HandleAttacking();
 
             _animator.SetBool(this.hit, _player.isHit);
         }
 
-        private bool HandleDashing()
+        public void Dash(Vector3 dir)
         {
-            var time = Time.timeSinceLevelLoad;
-            if (time - _lastDash < _mover.dashDuration)
+            if (dir.sqrMagnitude > dashDirThreshold)
             {
-                return false;
-            }
-
-            _lastDash = time;
-
-            var dashDir = _mover.lastDashDirection;
-            if (dashDir.sqrMagnitude > dashDirThreshold)
-            {
-                var dashSideways = Mathf.Abs(dashDir.x) > dashDirThreshold;
+                var dashSideways = Mathf.Abs(dir.x) > dashDirThreshold;
                 _animator.SetBool(this.dashingSideways, dashSideways);
                 if (dashSideways)
                 {
-                    var left = dashDir.x < 0f;
+                    var left = dir.x < 0f;
                     _spriteRenderer.flipX = left;
                 }
-                else if (Mathf.Abs(dashDir.z) > dashDirThreshold)
+                else if (Mathf.Abs(dir.z) > dashDirThreshold)
                 {
-                    var up = dashDir.z > 0f;
+                    var up = dir.z > 0f;
                     _animator.SetBool(this.dashingUp, up);
                     _animator.SetBool(this.dashingDown, !up);
                 }
 
-                return true;
+                return;
             }
 
+            StopDash();
+        }
+
+        public void StopDash()
+        {
             _animator.SetBool(this.dashingSideways, false);
             _animator.SetBool(this.dashingUp, false);
             _animator.SetBool(this.dashingDown, false);
-
-            return false;
         }
 
         private bool HandleAttacking()
@@ -104,7 +97,6 @@
                     // sideways attacks are prioritized first
                     var left = attackDir.x < 0f;
                     _spriteRenderer.flipX = left;
-                    // TODO: This needs to prevent "walking flipping" for at least a second or so
                 }
                 else if (Mathf.Abs(attackDir.z) > attackDirThreshold)
                 {
@@ -125,7 +117,8 @@
         private bool HandleWalking()
         {
             var velocity = _mover.velocity;
-            var walking = velocity.sqrMagnitude > moveThreshold && _mover.dashVelocity.sqrMagnitude < dashDirThreshold;
+            var walking = velocity.sqrMagnitude > moveThreshold &&
+                !((_animator.GetBool(this.dashingSideways) || _animator.GetBool(this.dashingUp) || _animator.GetBool(this.dashingDown)));
             _animator.SetBool(this.walking, walking);
             if (walking)
             {

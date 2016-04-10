@@ -1,6 +1,5 @@
 ﻿namespace Game
 {
-    using System.Collections;
     using UnityEngine;
 
     [RequireComponent(typeof(Rigidbody))]
@@ -49,12 +48,6 @@
         }
 
         public Vector3 dashVelocity
-        {
-            get;
-            private set;
-        }
-
-        public Vector3 lastDashDirection
         {
             get;
             private set;
@@ -145,18 +138,9 @@
             this.velocity = Vector3.Reflect(this.velocity, normal);
         }
 
-        public void Dash()
+        public Vector3 Dash()
         {
-            this.dashVelocity = this.velocity.normalized * this.dashDistance;
-            this.lastDashDirection = this.dashVelocity;
-
-            CoroutineHelper.instance.StartCoroutine(StopLastDash());
-        }
-
-        private IEnumerator StopLastDash()
-        {
-            yield return new WaitForSeconds(this.dashDuration);
-            this.lastDashDirection = Vector3.zero;
+            return (this.dashVelocity = this.velocity.normalized * this.dashDistance);
         }
     }
 }
