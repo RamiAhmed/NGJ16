@@ -114,6 +114,7 @@
 
         private IEnumerator Countdown()
         {
+			SpeakerManager.instance.Announce(Announcement.Begin);
             while (_countdown-- > 0)
             {
                 yield return new WaitForSeconds(1f);
