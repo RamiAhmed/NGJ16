@@ -92,18 +92,23 @@
 
         private void HandleControllerStart(int index)
         {
-            if (!_list.Contains(index))
+            if (_list.Contains(index))
             {
-                if (Input.GetButtonDown(string.Concat("Start_", index)))
-                {
-                    _list.Add(index);
-                    var playerSetup = this.playerSetups[index - 1];
-                    var playerGO = (GameObject)Instantiate(playerSetup.playerPrefab, playerSetup.playerStartPos.position, playerSetup.playerStartPos.rotation);
-                    var player = playerGO.GetComponent<PlayerController>();
+                return;
+            }
 
-                    var tankGO = (GameObject)Instantiate(playerSetup.tankPrefab, playerSetup.tankStartPos.position, playerSetup.tankStartPos.rotation);
-                    tankGO.GetComponent<Tank>().player = player;
-                }
+            if (Input.GetButtonDown(string.Concat("Start_", index)))
+            {
+                _list.Add(index);
+
+                var playerSetup = this.playerSetups[index - 1];
+                var playerGO = (GameObject)Instantiate(playerSetup.playerPrefab, playerSetup.playerStartPos.position, playerSetup.playerStartPos.rotation);
+                var player = playerGO.GetComponent<PlayerController>();
+
+                var tankGO = (GameObject)Instantiate(playerSetup.tankPrefab, playerSetup.tankStartPos.position, playerSetup.tankStartPos.rotation);
+                tankGO.GetComponent<Tank>().player = player;
+
+                PlayerList.instance.Add(player);
             }
         }
 

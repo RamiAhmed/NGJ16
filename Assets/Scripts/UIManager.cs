@@ -16,18 +16,5 @@
         {
             Application.Quit();
         }
-
-		//public void OnClickMainMenu()
-		//{
-		//	SceneManager.LoadScene("Test");
-		//}
-
-  //      private void Update()
-  //      {
-  //          if (Input.GetButtonDown("Reload"))
-  //          {
-  //              SceneManager.LoadScene("testlevel_2");
-  //          }
-  //      }
     }
 }

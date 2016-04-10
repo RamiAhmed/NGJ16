@@ -134,6 +134,11 @@
             _mover.Bounce(collision.contacts[0].normal);
         }
 
+        private void OnDisable()
+        {
+            PlayerList.instance.Remove(this);
+        }
+
         private void Attack(float hrot, float vrot)
         {
             var time = Time.timeSinceLevelLoad;
