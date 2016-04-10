@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace Game
+﻿namespace Game
 {
     using UnityEngine;
 
@@ -9,8 +7,8 @@ namespace Game
         public static SoundManager instance { get; private set; }
 
         public SoundFx[] soundFx = new SoundFx[0];
-		public AudioClip actionMusic;
-		public AudioClip quietMusic;
+        public AudioClip actionMusic;
+        public AudioClip quietMusic;
         public AudioSource backgroundPlayer;
         public AudioSource fxPlayer;
 
@@ -21,9 +19,9 @@ namespace Game
         public float fxVolume = 1f;
 
         private AudioClip _nextTrack;
-		private bool _actionMusic = false;
-		private bool _fadingOut = false;
-		private bool _fadingIn = false;
+        private bool _actionMusic = false;
+        private bool _fadingOut = false;
+        private bool _fadingIn = false;
 
         private void Awake()
         {
@@ -47,13 +45,14 @@ namespace Game
             QueueNextTrack();
             PlayTrack();
 
-			ManageFading();
+            ManageFading();
         }
 
-		public void ToggleMusic() {
-			_actionMusic = !_actionMusic;
-			_fadingOut = true;
-		}
+        public void ToggleMusic()
+        {
+            _actionMusic = !_actionMusic;
+            _fadingOut = true;
+        }
 
         public void PlayFx(SoundFxType fx)
         {
@@ -99,44 +98,52 @@ namespace Game
 
         private void QueueNextTrack()
         {
-			if(!_actionMusic) {
-				_nextTrack = quietMusic;
-			} else {
-				_nextTrack = actionMusic;
-			}                
+            if (!_actionMusic)
+            {
+                _nextTrack = quietMusic;
+            }
+            else
+            {
+                _nextTrack = actionMusic;
+            }
         }
 
-		private void ManageFading()
-		{
-			if(_fadingIn || _fadingOut) {
-				fadeOut();
+        private void ManageFading()
+        {
+            if (_fadingIn || _fadingOut)
+            {
+                fadeOut();
 
-				if (backgroundPlayer.volume <= 0.1) {
-					backgroundPlayer.clip = _nextTrack;
-					backgroundPlayer.Play();
-					_fadingOut = false;
-					_fadingIn = true;
-				}
+                if (backgroundPlayer.volume <= 0.1)
+                {
+                    backgroundPlayer.clip = _nextTrack;
+                    backgroundPlayer.Play();
+                    _fadingOut = false;
+                    _fadingIn = true;
+                }
 
-				fadeIn();
-			}
-		}
+                fadeIn();
+            }
+        }
 
-		void fadeIn()
-		{
-			if (backgroundPlayer.volume < backgroundVolume && _fadingIn) {
-				backgroundPlayer.volume += 0.5f * Time.deltaTime;
-			} else {
-				_fadingIn = false;
-			}
-		}
+        private void fadeIn()
+        {
+            if (backgroundPlayer.volume < backgroundVolume && _fadingIn)
+            {
+                backgroundPlayer.volume += 0.5f * Time.deltaTime;
+            }
+            else
+            {
+                _fadingIn = false;
+            }
+        }
 
-		void fadeOut()
-		{
-			if(backgroundPlayer.volume > 0.1f && _fadingOut)
-			{
-				backgroundPlayer.volume -= 0.5f * Time.deltaTime;
-			}
-		}
+        private void fadeOut()
+        {
+            if (backgroundPlayer.volume > 0.1f && _fadingOut)
+            {
+                backgroundPlayer.volume -= 0.5f * Time.deltaTime;
+            }
+        }
     }
 }
