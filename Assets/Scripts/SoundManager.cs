@@ -1,4 +1,6 @@
-﻿namespace Game
+﻿using System.Collections;
+
+namespace Game
 {
     using UnityEngine;
 
@@ -7,7 +9,8 @@
         public static SoundManager instance { get; private set; }
 
         public SoundFx[] soundFx = new SoundFx[0];
-        public AudioClip[] backgroundMusic = new AudioClip[0];
+		public AudioClip actionMusic;
+		public AudioClip quietMusic;
         public AudioSource backgroundPlayer;
         public AudioSource fxPlayer;
 
@@ -18,6 +21,9 @@
         public float fxVolume = 1f;
 
         private AudioClip _nextTrack;
+		private bool _actionMusic = false;
+		private bool _fadingOut = false;
+		private bool _fadingIn = false;
 
         private void Awake()
         {
@@ -40,7 +46,14 @@
         {
             QueueNextTrack();
             PlayTrack();
+
+			ManageFading();
         }
+
+		public void ToggleMusic() {
+			_actionMusic = !_actionMusic;
+			_fadingOut = true;
+		}
 
         public void PlayFx(SoundFxType fx)
         {
@@ -86,10 +99,44 @@
 
         private void QueueNextTrack()
         {
-            if (_nextTrack == null)
-            {
-                _nextTrack = GetRandomClip(backgroundMusic);
-            }
+			if(!_actionMusic) {
+				_nextTrack = quietMusic;
+			} else {
+				_nextTrack = actionMusic;
+			}                
         }
+
+		private void ManageFading()
+		{
+			if(_fadingIn || _fadingOut) {
+				fadeOut();
+
+				if (backgroundPlayer.volume <= 0.1) {
+					backgroundPlayer.clip = _nextTrack;
+					backgroundPlayer.Play();
+					_fadingOut = false;
+					_fadingIn = true;
+				}
+
+				fadeIn();
+			}
+		}
+
+		void fadeIn()
+		{
+			if (backgroundPlayer.volume < backgroundVolume && _fadingIn) {
+				backgroundPlayer.volume += 0.5f * Time.deltaTime;
+			} else {
+				_fadingIn = false;
+			}
+		}
+
+		void fadeOut()
+		{
+			if(backgroundPlayer.volume > 0.1f && _fadingOut)
+			{
+				backgroundPlayer.volume -= 0.5f * Time.deltaTime;
+			}
+		}
     }
 }
