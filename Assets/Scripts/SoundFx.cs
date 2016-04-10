@@ -22,7 +22,8 @@
 		SpeakerTankEmpty,
 		SpeakerPlayerHit,
 		SpeakerPlayerKilled,
-		SpeakerTankLeaking
+		SpeakerTankLeaking,
+		None
 	}
 
 }
