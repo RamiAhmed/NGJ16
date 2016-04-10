@@ -69,9 +69,9 @@
             if (dashDir.sqrMagnitude > dashDirThreshold)
             {
                 var dashSideways = Mathf.Abs(dashDir.x) > dashDirThreshold;
+                _animator.SetBool(this.dashingSideways, dashSideways);
                 if (dashSideways)
                 {
-                    _animator.SetBool(this.dashingSideways, true);
                     var left = dashDir.x < 0f;
                     _spriteRenderer.flipX = left;
                 }

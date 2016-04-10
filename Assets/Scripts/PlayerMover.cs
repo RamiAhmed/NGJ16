@@ -133,7 +133,7 @@
             }
 
             // Velocity Verlet integration : http://lolengine.net/blog/2011/12/14/understanding-motion-in-games
-            var speed = ((prevVelocity + this.velocity) / 0.5f);
+            var speed = (prevVelocity + this.velocity) / 0.5f;
             speed.y = 0f;
 
             // We set the velocity on the rigidbody so as to utilize Unity collision detection, this in turn means that we do not multiply by deltaTime as this is done internally in rigidbody
