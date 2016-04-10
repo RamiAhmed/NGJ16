@@ -10,7 +10,7 @@
     [RequireComponent(typeof(SphereCollider))]
     public class PlayerController : MonoBehaviour
     {
-        private const float _velocityIsHitThresholdSqr = 0.1f;
+        private const float _velocityIsHitThresholdSqr = 1f;
 
         [Range(1, 3)]
         public int playerIndex = 1;
@@ -169,7 +169,7 @@
             this.attackDirection = dir;
             CoroutineHelper.instance.StartCoroutine(StopAttack());
 
-            var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius, dir, this.attackRadius, Layers.instance.playerLayer);
+            var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius * 2f, dir, this.attackRadius, Layers.instance.playerLayer);
             for (int i = 0; i < hits.Length; i++)
             {
                 var hit = hits[i];
@@ -214,8 +214,11 @@
                     continue;
                 }
 
-                tank.isLeaking = false;
-                SpeakerManager.instance.Announce(Announcement.TankRepaired);
+                if (tank.isLeaking)
+                {
+                    tank.isLeaking = false;
+                    SpeakerManager.instance.Announce(Announcement.TankRepaired);
+                }
             }
         }
 

@@ -83,10 +83,10 @@
             {
                 var height = Screen.height;
                 var width = Screen.width;
-                var w = 500f;
-                var h = 150f;
+                var w = 600f;
+                var h = 200f;
                 GUI.color = this.countdownColor;
-                GUI.Label(new Rect((width * 0.5f) - (w * 0.5f), (height * 0.5f) - (h * 0.5f), w, h), "PRESS START TO JOIN", _style);
+                GUI.Label(new Rect((width * 0.5f) - (w * 0.5f), (height * 0.5f) - (h * 0.5f), w, h), "PRESS START TO JOIN\n( Min. 2 players )", _style);
             }
         }
 

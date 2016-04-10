@@ -53,10 +53,10 @@
                 var color = GetPlayerColor(player.playerIndex);
 
                 sb.AppendFormat("<color={0}>", color);
-                sb.AppendFormat("Player <b>{0}</b></color> Scores - ", player.playerIndex);
-                sb.AppendFormat("Enemy hits: <b<{0}</b>, ", score.enemyHits);
-                sb.AppendFormat("Tank hits: <b>{0}</b>, ", score.tankHits);
-                sb.AppendFormat("Wall bounces: <b>{0}</b>, ", score.wallBounces);
+                sb.AppendFormat("Player {0}</color> Scores - ", player.playerIndex);
+                sb.AppendFormat("Enemy hits: {0}, ", score.enemyHits);
+                sb.AppendFormat("Tank hits: {0}, ", score.tankHits);
+                sb.AppendFormat("Wall bounces: {0}, ", score.wallBounces);
                 sb.AppendLine();
             }
 
