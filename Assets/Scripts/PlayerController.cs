@@ -201,6 +201,7 @@
                 }
 
                 tank.isLeaking = false;
+				SpeakerManager.instance.Announce(Announcement.TankRepaired);
             }
         }
 
@@ -291,12 +292,15 @@
         public void OnTankDepleted()
         {
             _isVulnerable = true;
+			SpeakerManager.instance.Announce(Announcement.TankEmpty);
             Debug.Log(this.ToString() + " has an empty tank, and is now vulnerable");
         }
 
         public void OnDeath()
         {
             Debug.Log(this.ToString() + " has died");
+			SoundManager.instance.PlayFx(SoundFxType.PlayerDeath);
+			SpeakerManager.instance.Announce(Announcement.PlayerKilled);
             CutsceneManager.instance.StartCutscene(this.gameObject);
         }
     }

@@ -133,6 +133,7 @@ namespace Game
             if (!this.isLeaking)
             {
                 this.isLeaking = true;
+				SpeakerManager.instance.Announce(Announcement.TankHit);
                 Debug.Log(this.ToString() + " start leaking");
             }
             else
