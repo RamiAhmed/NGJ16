@@ -14,15 +14,17 @@
 
         public string walking = "Walking";
 
-        public string attackingUp = "AttackUp";
+        public string attackingSideways = "AttackSideways";
 
-        public string attacking = "AttackSideways";
+        public string attackingUp = "AttackUp";
 
         public string attackingDown = "AttackDown";
 
-        public string dashingLeft = "DashLeft";
+        public string dashingSideways = "DashSideways";
 
-        public string dashingRight = "DashRight";
+        public string dashingUp = "DashUp";
+
+        public string dashingDown = "DashDown";
 
         public string hit = "Hit";
 
@@ -59,7 +61,7 @@
             if (attackDir.sqrMagnitude > attackDirThreshold)
             {
                 var attackSideways = Mathf.Abs(attackDir.x) > attackDirThreshold;
-                _animator.SetBool(this.attacking, attackSideways);
+                _animator.SetBool(this.attackingSideways, attackSideways);
                 if (attackSideways)
                 {
                     // sideways attacks are prioritized first
@@ -76,7 +78,7 @@
             }
             else
             {
-                _animator.SetBool(this.attacking, false);
+                _animator.SetBool(this.attackingSideways, false);
                 _animator.SetBool(this.attackingUp, false);
                 _animator.SetBool(this.attackingDown, false);
             }
@@ -84,9 +86,25 @@
             var dashDir = _mover.dashVelocity;
             if (dashDir.sqrMagnitude > dashDirThreshold)
             {
-                var left = dashDir.x < 0f;
-                _animator.SetBool(this.dashingLeft, left);
-                _animator.SetBool(this.dashingRight, !left);
+                var dashSideways = Mathf.Abs(dashDir.x) > dashDirThreshold;
+                _animator.SetBool(this.dashingSideways, dashSideways);
+                if (dashSideways)
+                {
+                    var left = dashDir.x < 0f;
+                    _spriteRenderer.flipX = left;
+                }
+                else if (Mathf.Abs(dashDir.z) > dashDirThreshold)
+                {
+                    var up = dashDir.z > 0f;
+                    _animator.SetBool(this.dashingUp, up);
+                    _animator.SetBool(this.dashingDown, !up);
+                }
+            }
+            else
+            {
+                _animator.SetBool(this.dashingSideways, false);
+                _animator.SetBool(this.dashingUp, false);
+                _animator.SetBool(this.dashingDown, false);
             }
 
             _animator.SetBool(this.hit, _player.isHit);
