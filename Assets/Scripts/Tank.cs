@@ -14,8 +14,8 @@ namespace Game
 
         public TankSeverity[] severityLevels = new TankSeverity[0];
 
-        [SerializeField, ReadOnly]
-        private float current = 0f;
+        [ReadOnly]
+        public float current = 0f;
 
         [SerializeField, ReadOnly]
         private int _hits = 0;
