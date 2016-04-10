@@ -41,7 +41,7 @@
 			if (instance != null)
 			{
 				Debug.LogWarning(this.ToString() + " another SpeakerManager has already been registered, destroying this one");
-				GameObject.Destroy(instance);
+				GameObject.Destroy(this);
 				return;
 			}
 

@@ -14,7 +14,7 @@
             if (instance != null)
             {
                 Debug.LogWarning(this.ToString() + " another PlayerList has already been registered, destroying this one");
-                Destroy(this.gameObject);
+                Destroy(this);
                 return;
             }
 

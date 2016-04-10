@@ -11,7 +11,7 @@
             if (instance != null)
             {
                 Debug.LogWarning(this.ToString() + " another CoroutineHelper has already been registered, destroyin this one");
-                Destroy(this.gameObject, 0.1f);
+                Destroy(this, 0.1f);
                 return;
             }
 
