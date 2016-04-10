@@ -4,8 +4,6 @@
     using UnityEngine;
 
     [RequireComponent(typeof(Animator))]
-    [RequireComponent(typeof(PlayerMover))]
-    [RequireComponent(typeof(PlayerController))]
     public class PlayerAnimator : MonoBehaviour
     {
         private const float moveThreshold = 0.1f;

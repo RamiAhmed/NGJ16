@@ -4,6 +4,7 @@
     using System.Collections;
     using UnityEngine;
 
+    [RequireComponent(typeof(PlayerAnimator))]
     [RequireComponent(typeof(PlayerMover))]
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(SphereCollider))]
