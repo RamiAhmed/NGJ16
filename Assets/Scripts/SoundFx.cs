@@ -14,7 +14,13 @@
 		PlayerHit,
 		PlayerDash,
 		PlayerSwing,
-		TankHit
+		TankHit,
+		SpeakerFirstLeak,
+		SpeakerTankRepaired,
+		SpeakerTankEmpty,
+		SpeakerPlayerHit,
+		SpeakerPlayerKilled,
+		SpeakerTankLeaking
 	}
 
 }
