@@ -11,6 +11,7 @@
         public AudioClip quietMusic;
         public AudioSource backgroundPlayer;
         public AudioSource fxPlayer;
+		public AudioSource loopingFxPlayer;
 
         [Range(0f, 1f)]
         public float backgroundVolume = .5f;
@@ -22,6 +23,7 @@
         private bool _actionMusic = false;
         private bool _fadingOut = false;
         private bool _fadingIn = false;
+
 
         private void Awake()
         {
@@ -38,6 +40,7 @@
         private void Start()
         {
             backgroundPlayer.priority = 0;
+			loopingFxPlayer.loop = true;
         }
 
         private void Update()
@@ -57,22 +60,49 @@
         public void PlayFx(SoundFxType fx)
         {
             AudioClip[] clips = null;
-            // Currently only supports the first match. Don't be dumb ;-)
-            for (int i = 0; i < soundFx.Length; i++)
-            {
-                var sfx = soundFx[i];
-                if (sfx.type == fx)
-                {
-                    clips = sfx.clips;
-                    break;
-                }
-            }
+			SoundFx sfx = GetSfx(fx);
+			if(sfx != null) {
+				clips = sfx.clips;
+			}
 
             if (clips != null)
             {
                 fxPlayer.PlayOneShot(GetRandomClip(clips), fxVolume);
             }
         }
+
+		private SoundFx GetSfx(SoundFxType fx) {
+			// Currently only supports the first match. Don't be dumb ;-)
+			for (int i = 0; i < soundFx.Length; i++)
+			{
+				var sfx = soundFx[i];
+				if (sfx.type == fx)
+				{
+					return sfx;
+				}
+			}
+			return null;
+		}
+			
+		private SoundFxType _currentLoopingSfxType = SoundFxType.None;
+		public void StartFx(SoundFxType fx)
+		{
+			SoundFx sfx = GetSfx(fx);
+			AudioClip clip = GetRandomClip(sfx.clips);
+			if(clip != null) {
+				loopingFxPlayer.clip = clip;
+				loopingFxPlayer.Play();
+				_currentLoopingSfxType = fx;
+			}
+		}
+
+		public void StopFx(SoundFxType fx)
+		{
+			if(_currentLoopingSfxType == fx) {
+				loopingFxPlayer.Stop();
+				_currentLoopingSfxType = SoundFxType.None;
+			}
+		}
 
         private void PlayTrack()
         {
