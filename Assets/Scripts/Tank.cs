@@ -58,7 +58,7 @@ namespace Game
                 Destroy(this.gameObject, 0.01f);
                 return;
             }
-            
+
             this.current = this.max;
         }
 
@@ -128,6 +128,7 @@ namespace Game
             var normal = (player.transform.position - this.transform.position).normalized;
             player.Bounce(normal);
 
+            SoundManager.instance.PlayFx(SoundFxType.TankHit);
             _hits++;
             if (!this.isLeaking)
             {

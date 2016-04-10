@@ -7,6 +7,10 @@
     {
         public string gameScene = "testLevel_2";
 
+        private void OnEnable()
+        {
+        }
+
         public void OnClickStart()
         {
             SceneManager.LoadScene(this.gameScene);

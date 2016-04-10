@@ -27,6 +27,7 @@
         public void Activate()
         {
             this.transform.GetChild(0).gameObject.SetActive(true);
+            PauseManager.isPaused = true;
         }
 
         public void Restart()

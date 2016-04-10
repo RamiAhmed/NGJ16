@@ -168,6 +168,8 @@
 
                 hit.transform.GetComponent<PlayerController>().Hit(this);
             }
+
+            SoundManager.instance.PlayFx(SoundFxType.PlayerSwing);
         }
 
         private IEnumerator StopAttack()
@@ -211,6 +213,7 @@
 
             _lastDash = time;
             _mover.Dash();
+            SoundManager.instance.PlayFx(SoundFxType.PlayerDash);
             Debug.Log(this.ToString() + " DASH!");
         }
 
@@ -269,6 +272,7 @@
 
             this.isHit = true;
             CoroutineHelper.instance.StartCoroutine(SetHitFalse());
+            SoundManager.instance.PlayFx(SoundFxType.PlayerHit);
         }
 
         private IEnumerator SetHitFalse()
