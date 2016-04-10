@@ -14,10 +14,10 @@
 		public AudioSource loopingFxPlayer;
 
         [Range(0f, 1f)]
-        public float backgroundVolume = .5f;
+        public float backgroundVolume = .3f;
 
         [Range(0f, 1f)]
-        public float fxVolume = 0.8f;
+        public float fxVolume = 0.6f;
 
 		[Range(0f, 1f)]
 		public float announcerVolume = 1f;
@@ -126,7 +126,8 @@
             if (!backgroundPlayer.isPlaying)
             {
                 backgroundPlayer.clip = _nextTrack;
-                backgroundPlayer.Play();
+				backgroundPlayer.volume = backgroundVolume;
+				backgroundPlayer.Play();
                 _nextTrack = null;
             }
         }
