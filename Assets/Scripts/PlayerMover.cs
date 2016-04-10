@@ -18,6 +18,9 @@
         [Range(1f, 100f)]
         public float dashDistance = 10f;
 
+        [Range(0.1f, 3f)]
+        public float dashDuration = 0.7f;
+
         [Range(0.0001f, 0.1f)]
         public float minimumSpeed = 0.01f;
 
@@ -141,7 +144,7 @@
 
         private IEnumerator StopLastDash()
         {
-            yield return new WaitForSeconds(0.8f);
+            yield return new WaitForSeconds(this.dashDuration);
             this.lastDashDirection = Vector3.zero;
         }
     }
