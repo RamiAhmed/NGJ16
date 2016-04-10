@@ -14,24 +14,27 @@
 			case Announcement.TankHit:
 				if(!firstLeak) {
 					firstLeak = true;
-					SoundManager.instance.PlayFx(SoundFxType.SpeakerFirstLeak);
+					SoundManager.instance.PlayAnnouncement(SoundFxType.SpeakerFirstLeak);
 					SoundManager.instance.ToggleMusic();
 				} else {
-					SoundManager.instance.PlayFx(SoundFxType.SpeakerTankLeaking);
+					SoundManager.instance.PlayAnnouncement(SoundFxType.SpeakerTankLeaking);
 				}
 
 				break;
 			case Announcement.TankRepaired:
-				SoundManager.instance.PlayFx(SoundFxType.SpeakerTankRepaired);
+				SoundManager.instance.PlayAnnouncement(SoundFxType.SpeakerTankRepaired);
 				break;
 			case Announcement.TankEmpty:
-				SoundManager.instance.PlayFx(SoundFxType.SpeakerTankEmpty);
+				SoundManager.instance.PlayAnnouncement(SoundFxType.SpeakerTankEmpty);
 				break;
 			case Announcement.PlayerHit:
-				SoundManager.instance.PlayFx(SoundFxType.SpeakerPlayerHit);
+				SoundManager.instance.PlayAnnouncement(SoundFxType.SpeakerPlayerHit);
 				break;
 			case Announcement.PlayerKilled:
-				SoundManager.instance.PlayFx(SoundFxType.SpeakerPlayerKilled);
+				SoundManager.instance.PlayAnnouncement(SoundFxType.SpeakerPlayerKilled);
+				break;
+			case Announcement.Begin:
+				SoundManager.instance.PlayAnnouncement(SoundFxType.SpeakerBegin);
 				break;
 			}
 		}
@@ -56,7 +59,8 @@
 		TankRepaired,
 		TankEmpty,
 		PlayerHit,
-		PlayerKilled
+		PlayerKilled,
+		Begin
 	}
 }
 

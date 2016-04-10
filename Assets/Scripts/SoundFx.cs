@@ -23,7 +23,8 @@
 		SpeakerPlayerHit,
 		SpeakerPlayerKilled,
 		SpeakerTankLeaking,
-		None
+		None,
+		SpeakerBegin
 	}
 
 }

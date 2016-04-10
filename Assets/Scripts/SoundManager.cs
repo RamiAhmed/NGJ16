@@ -17,7 +17,10 @@
         public float backgroundVolume = .5f;
 
         [Range(0f, 1f)]
-        public float fxVolume = 1f;
+        public float fxVolume = 0.8f;
+
+		[Range(0f, 1f)]
+		public float announcerVolume = 1f;
 
         private AudioClip _nextTrack;
         private bool _actionMusic = false;
@@ -70,6 +73,20 @@
                 fxPlayer.PlayOneShot(GetRandomClip(clips), fxVolume);
             }
         }
+
+		public void PlayAnnouncement(SoundFxType fx)
+		{
+			AudioClip[] clips = null;
+			SoundFx sfx = GetSfx(fx);
+			if(sfx != null) {
+				clips = sfx.clips;
+			}
+
+			if (clips != null)
+			{
+				fxPlayer.PlayOneShot(GetRandomClip(clips), announcerVolume);
+			}
+		}
 
 		private SoundFx GetSfx(SoundFxType fx) {
 			// Currently only supports the first match. Don't be dumb ;-)
