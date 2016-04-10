@@ -15,6 +15,7 @@
 				if(!firstLeak) {
 					firstLeak = true;
 					SoundManager.instance.PlayFx(SoundFxType.SpeakerFirstLeak);
+					SoundManager.instance.ToggleMusic();
 				} else {
 					SoundManager.instance.PlayFx(SoundFxType.SpeakerTankLeaking);
 				}
