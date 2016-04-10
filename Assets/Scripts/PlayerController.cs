@@ -169,7 +169,7 @@
             this.attackDirection = dir;
             CoroutineHelper.instance.StartCoroutine(StopAttack());
 
-            var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius * 2f, dir, this.attackRadius, Layers.instance.playerLayer);
+            var hits = Physics.SphereCastAll(this.transform.position + (dir * 0.5f), _radius * 3f, dir, this.attackRadius, Layers.instance.playerLayer);
             for (int i = 0; i < hits.Length; i++)
             {
                 var hit = hits[i];
