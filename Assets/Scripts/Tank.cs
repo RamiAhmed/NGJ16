@@ -69,7 +69,7 @@ namespace Game
                 return;
             }
 
-            var leakRate = this.severityLevels[this.severityLevels.Length - 1].leakRatePerSecond;
+            var leakRate = this.severityLevels[0].leakRatePerSecond;
             for (int i = 0; i < this.severityLevels.Length; i++)
             {
                 var severity = this.severityLevels[i];
@@ -89,7 +89,7 @@ namespace Game
             _currentLeakRate = leakRate;
 #endif
 
-            this.current -= 1f / leakRate;
+            this.current -= leakRate * Time.deltaTime;
             if (this.current <= 0f)
             {
                 this.player.OnTankDepleted();

@@ -13,7 +13,7 @@
         public SpriteRenderer containerFill;
 
         private Tank _tank;
-        //private Animator _animator;
+        private Animator _animator;
 
         private void OnEnable()
         {
@@ -28,7 +28,7 @@
                 throw new ArgumentNullException("containerFill");
             }
 
-            //_animator = this.GetComponent<Animator>();
+            _animator = this.GetComponent<Animator>();
         }
 
         private void Update()
@@ -36,8 +36,8 @@
             var frac = _tank.current / _tank.max;
             this.containerFill.gameObject.transform.localScale = new Vector3(1f, frac, 1f);
 
-            //_animator.SetBool(this.leaking, _tank.isLeaking);
-            //_animator.SetBool(this.patched, !_tank.isLeaking && _tank.current < _tank.max);
+            _animator.SetBool(this.leaking, _tank.isLeaking);
+            _animator.SetBool(this.patched, !_tank.isLeaking && _tank.current < _tank.max);
             //_animator.SetFloat(this.levels, _tank.current);
         }
     }
