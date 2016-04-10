@@ -46,18 +46,8 @@
 
         private void Update()
         {
-            if (!HandleDashing())
-            {
-                // if not dashing, check for walking
-                HandleWalking();
-            }
-            else
-            {
-                // if dashing, we are definitely not walking
-                _animator.SetBool(this.walking, false);
-            }
-
-            // check whether we need to handle attacking
+            HandleDashing();
+            HandleWalking();
             HandleAttacking();
 
             _animator.SetBool(this.hit, _player.isHit);
@@ -124,7 +114,7 @@
         private bool HandleWalking()
         {
             var velocity = _mover.velocity;
-            var walking = velocity.sqrMagnitude > moveThreshold;
+            var walking = velocity.sqrMagnitude > moveThreshold && _mover.dashVelocity.sqrMagnitude < dashDirThreshold;
             _animator.SetBool(this.walking, walking);
             if (walking)
             {
