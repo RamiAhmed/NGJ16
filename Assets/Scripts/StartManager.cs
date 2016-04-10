@@ -19,6 +19,8 @@
 
         public PlayerSetup[] playerSetups = new PlayerSetup[0];
 
+        public Font font;
+
         private List<int> _list = new List<int>(3);
         private bool _starting;
         private int _countdown;
@@ -52,9 +54,21 @@
                 _style = new GUIStyle(GUI.skin.label);
                 _style.fontSize = this.fontSize;
                 _style.alignment = TextAnchor.MiddleCenter;
+                if (this.font != null)
+                {
+                    _style.font = this.font;
+                }
             }
 
-            GUI.Label(new Rect(5f, 5f, 100f, 50f), "Players Joined: " + _list.Count);
+            var count = _list.Count;
+            for (int i = 0; i < count; i++)
+            {
+                var idx = _list[i];
+                var texture = playerSetups[idx - 1].controllerUI;
+                var w = 100f;
+                var h = 80f;
+                GUI.DrawTexture(new Rect(w + (i * (w * 2f)), Screen.height - (h + (h * 0.5f)), w, h), texture);
+            }
 
             if (_starting)
             {
@@ -65,23 +79,36 @@
                 GUI.color = this.countdownColor;
                 GUI.Label(new Rect((width * 0.5f) - (w * 0.5f), (height * 0.5f) - (h * 0.5f), w, h), _countdown.ToString(), _style);
             }
+            else
+            {
+                var height = Screen.height;
+                var width = Screen.width;
+                var w = 500f;
+                var h = 150f;
+                GUI.color = this.countdownColor;
+                GUI.Label(new Rect((width * 0.5f) - (w * 0.5f), (height * 0.5f) - (h * 0.5f), w, h), "PRESS START TO JOIN", _style);
+            }
         }
 
         private void HandleControllerStart(int index)
         {
-            if (!_list.Contains(index))
+            if (_list.Contains(index))
             {
-                if (Input.GetButtonDown(string.Concat("Start_", index)))
-                {
-                    Debug.Log("Start player " + index);
-                    _list.Add(index);
-                    var playerSetup = this.playerSetups[index - 1];
-                    var playerGO = (GameObject)Instantiate(playerSetup.playerPrefab, playerSetup.playerStartPos.position, playerSetup.playerStartPos.rotation);
-                    var player = playerGO.GetComponent<PlayerController>();
+                return;
+            }
 
-                    var tankGO = (GameObject)Instantiate(playerSetup.tankPrefab, playerSetup.tankStartPos.position, playerSetup.tankStartPos.rotation);
-                    tankGO.GetComponent<Tank>().player = player;
-                }
+            if (Input.GetButtonDown(string.Concat("Start_", index)))
+            {
+                _list.Add(index);
+
+                var playerSetup = this.playerSetups[index - 1];
+                var playerGO = (GameObject)Instantiate(playerSetup.playerPrefab, playerSetup.playerStartPos.position, playerSetup.playerStartPos.rotation);
+                var player = playerGO.GetComponent<PlayerController>();
+
+                var tankGO = (GameObject)Instantiate(playerSetup.tankPrefab, playerSetup.tankStartPos.position, playerSetup.tankStartPos.rotation);
+                tankGO.GetComponent<Tank>().player = player;
+
+                PlayerList.instance.Add(player);
             }
         }
 

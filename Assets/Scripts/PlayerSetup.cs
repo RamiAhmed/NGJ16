@@ -11,5 +11,7 @@
 
         public Transform playerStartPos;
         public Transform tankStartPos;
+
+        public Texture2D controllerUI;
     }
 }
