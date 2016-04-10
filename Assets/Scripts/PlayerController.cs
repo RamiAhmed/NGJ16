@@ -142,6 +142,7 @@
             }
 
             //Debug.Log(this.ToString() + " reflect off wall");
+            PlayOnHitVFX();
             _mover.Bounce(collision.contacts[0].normal);
             ScoreboardManager.instance.Get(this).wallBounces++;
         }
@@ -276,11 +277,7 @@
 
         public void Hit(PlayerController attacker)
         {
-            if (this.onHitParticleSystemGO != null)
-            {
-                var systemGO = (GameObject)Instantiate(this.onHitParticleSystemGO, this.transform.position, this.transform.rotation);
-                PlayParticleSystems(systemGO);
-            }
+            PlayOnHitVFX();
 
             if (_isVulnerable)
             {
@@ -295,6 +292,15 @@
             this.isHit = true;
             CoroutineHelper.instance.StartCoroutine(SetHitFalse());
             SoundManager.instance.PlayFx(SoundFxType.PlayerHit);
+        }
+
+        private void PlayOnHitVFX()
+        {
+            if (this.onHitParticleSystemGO != null)
+            {
+                var systemGO = (GameObject)Instantiate(this.onHitParticleSystemGO, this.transform.position, this.transform.rotation);
+                PlayParticleSystems(systemGO);
+            }
         }
 
         private IEnumerator SetHitFalse()
